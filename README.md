@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # qsp
 
 > A Vue.js project
@@ -20,3 +21,7 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 # QSP
+=======
+# QSP
+Questionnaire Survey Platform
+>>>>>>> c50691b1a39cd5393e4e0564dfc24576886c2ff9
