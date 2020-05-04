@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+
+        <vheader content="主页" :backRouter="this.$router"/>
+
     <div style="margin-top:calc(1vh)">
       <el-row type="flex" justify="center" align="center">
         <el-col :xs="20" :lg="10">

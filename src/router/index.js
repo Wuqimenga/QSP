@@ -3,14 +3,18 @@ import Router from 'vue-router'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Home from '@/pages/Home'
+import Edit from '@/pages/Edit'
+import Preview from '@/pages/Preview'
+import Answer from '@/pages/Answer'
+import Done from '@/pages/Done'
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      redirect: '/login'
-    },
+    // {
+    //   path: '/',
+    //   redirect: '/login'
+    // },
     {
       path: '/login',
       name: 'Login',
@@ -57,9 +61,9 @@ export default new Router({
       meta: {
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
-    },
+    },*/
     {
-      path: '/preview',
+      path: '/preview/:userId',
       name: 'Preview',
       component: Preview,
       meta: {
@@ -89,7 +93,11 @@ export default new Router({
       meta: {
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
-    }, */
+    }, 
+
+
+
+
   ]
 })
 
