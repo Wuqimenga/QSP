@@ -8,7 +8,7 @@ import QueTemple from './QueTemple'
 export default{
     data(){
         return{
-            id:0,// 还没完整，从问卷链接或二维码获取问卷id
+            paperid:0,// 还没完整，从问卷链接或二维码获取问卷id
             formData:{},
         }
     },
@@ -16,7 +16,7 @@ export default{
         // 根据问卷id从后端获取问卷信息f res.result
         // res.result 结构参考：答卷JSON结构.json
         api
-        .GetQuestionnaireToanswer(this.id)// 提交问卷id到后端
+        .GetQuestionnaireToanswer(this.paperid)// 提交问卷id到后端
         .then(res =>{
             if(res.code == "01"){
                 this.formData=res.result;
@@ -32,11 +32,6 @@ export default{
     },
     components:{
         "abc":QueTemple
-    },
-    methods:{
-        back(){
-            this.$router.push({name:'Done'})
-        }
     },
 }
 </script>

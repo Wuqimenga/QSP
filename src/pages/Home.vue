@@ -269,6 +269,7 @@ export default {
       });
     },
     createQuestionnaire: function() {
+      localStorage.clear();
       this.$router.push({
         name: "Edit",
         query: { userId: this.querylist.userId }
