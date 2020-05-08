@@ -50,14 +50,14 @@
                     <span style="color:red;">{{question.ismust==true?"*":""}}</span> 
                     {{i_q+1}} . 
                     {{question.questiontitle}}
-                    <span style="color:gray;">[{{question.type==0?"单选题":(question.type==1?"多选题":"填空题")}}]</span>
+                    <span style="color:gray;">[{{question.topicid==0?"单选题":(question.topicid==1?"多选题":"填空题")}}]</span>
                 </p>
                 <div v-for='(option,i_o) in question.options' :key="i_o">
                     <el-radio :label="option.scontent"></el-radio>
                 </div>
 
                 <!-- 这只是个没有用的输入框，用来演示的 -->
-                <div v-if="question.type==2">
+                <div v-if="question.topicid==2">
                     <el-form-item>
                         <el-input  :disabled="true" placeholder="填空内容" />
                     </el-form-item>
@@ -110,8 +110,8 @@
 
                                     <el-button 
                                     @click="del_option(i_q,i_o)" 
-                                    :disabled="((question.type==0&&question.options.length<2)
-                                    ||(question.type==1&&question.options.length<=2))?true:false"
+                                    :disabled="((question.topicid==0&&question.options.length<2)
+                                    ||(question.topicid==1&&question.options.length<=2))?true:false"
                                     type="primary"
                                     size="small"
                                     icon="el-icon-minus" 
@@ -139,7 +139,7 @@
                         
                     
                     <!-- 多选题显示编辑限制选项个数组件 -->
-                        <div v-if="question.type==1">
+                        <div v-if="question.topicid==1">
                             <el-row>
                                 <el-col :xs="7" :sm="4" :md="4" :lg="4" :xl="4">
                                     <div class="small-title">
@@ -317,14 +317,22 @@ export default {
                 else{
                     array.questions[i].show=true;
                 }
-                // 在formatData里添加ans，记录选择题的答案（所选选项的下标）
-                if(array.questions[i].type==0)// 如果是单选题
+                if(array.questions[i].topicid<2)
                 {
-                    array.questions[i].ans=null;
-                }
-                else if(array.questions[i].type==1)//如果是多选题
-                {
-                    array.questions[i].ans=[];
+                    // 在formatData里添加ans，记录选择题的答案（所选选项的下标）
+                    if(array.questions[i].topicid==0)// 如果是单选题
+                    {
+                        array.questions[i].topicid=i;
+                    }
+                    else if(array.questions[i].topicid==1)//如果是多选题
+                    {
+                        array.questions[i].ans=[];
+                    }
+                    // 添加选项id
+                    for(var j=0;j<array.questions[i].options.length;j++)
+                    {
+                        array.questions[i].options[j].selectid=j;
+                    }
                 }
             }
             return array;
@@ -415,7 +423,7 @@ export default {
             var array = this.formData.questions;
             for(var i=0;i<index;i++)
             {
-                if(array[i].type==0)// 如果是单选题
+                if(array[i].topicid==0)// 如果是单选题
                 {
                     idList.push(array[i]);
                     idList=Array.from(new Set(idList));
@@ -440,11 +448,11 @@ export default {
             this.dialogVisible=false;
         },
         // 增加题目
-        add_question(type){
+        add_question(topicid){
             var question={};
             question.show=false;
             question.questionid=++questionId;
-            question.type=type;
+            question.topicid=topicid;
             question.questiontitle='题目';
             question.err=false;
             question.ismust=false;
@@ -452,7 +460,7 @@ export default {
                 question_id:null,
                 option_index:[]
             }
-            if(type==0){// 单选题
+            if(topicid==0){// 单选题
                 question.options=[
                     {
                         scontent:'选项',
@@ -460,7 +468,7 @@ export default {
                     }
                 ];
             }
-            else if(type==1){// 多选题
+            else if(topicid==1){// 多选题
                 question.min=2;
                 question.max=null;
                 question.options=[
@@ -571,7 +579,7 @@ export default {
         add_option(i_q,i_o){
             var option={};
             option.scontent='选项';
-            if(this.formData.questions[i_q].type==0)
+            if(this.formData.questions[i_q].topicid==0)
             {
                 option.goquestion=[];
             }
