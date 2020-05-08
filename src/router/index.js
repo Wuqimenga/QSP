@@ -1,4 +1,4 @@
-import Vue from 'vue'
+﻿import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
@@ -9,6 +9,10 @@ import Answer from '@/pages/Answer'
 import Done from '@/pages/Done'
 import Analysis from '@/pages/Analysis'
 
+import Share from '@/pages/Share'
+
+
+import Result from '@/pages/Result'
 
 Vue.use(Router)
 
@@ -36,12 +40,7 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
- /*    {
-      path: '/unconnected',
-      name: 'Unconnected',
-      component: Unconnected
-    },
-    {
+      {
       path: '/share',
       name: 'Share',
       component: Share,
@@ -49,14 +48,22 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
-    {
+       {
       path: '/result',
       name: 'Result',
       component: Result,
       meta: {
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
-    },*/
+    },
+ /*    
+    //这个页面没有使用-lyw
+    {
+      path: '/unconnected',
+      name: 'Unconnected',
+      component: Unconnected
+    },
+    */
     {
       path: '/analysis',
       name: 'Analysis',
