@@ -2,86 +2,126 @@ const userSequelize=require('../../models/index').control_user;
 const questionnaires = require('../models').questionnaires;
 const question = require('../models').question;
 const option = require('../models').option;
-const express = require('express');
-const router = express.Router();
+const answer=require('../models').answer;
 
 module.exports = {
-    get-questionnaires: async function (req, res, next) {
-    var re={};
-    if (req.body.explore){
-    questionnaire.findAll({
-        include:[{
-           where: {
-               userid: req.body.name,
-               questiontitle: req.body.questionnairename
-           }
-           }]
-    })}
-    else {
-    questionnaire.findAll({
-            include:[{
-               model:questionnaire,
-               where: {
-                   userid: req.body.name
-               }
-               }]
-    })
-    }.then(function(data)){
-        if (data.length){
-            if (req.body.status=='1')
-            data.findAll{
-                where {
-                    data.ispublish:true
+    get-questionnaires:async function (req, res) {
+    var body={code:'01',result:''};
+    var result
+    var condition={
+        attributes:['paperid','papertir','ispublish','creamtime'],
+        where :{
+            userid:req.body.userid,
+            questionnairestitle:req.body.questionnairestitle
+        }
+    };
+    try {
+    var result=[];
+    var data = await _model.findAll(questionnaires, condition);
+        for (let i=0;i<data.length;i++)
+        {
+            var body2={paperid:'',papertitle:'',ispublish:'',creaetime:'',answersheetnumber:''};
+            body2.paperid=data.paperid;
+            body2.papertitle=data.papertitle;
+            body2.ispublish=data.ispublish;
+            body2.creaetime=data.creaetime;
+            var con={
+                where :{
+                    paperid:data.paperid
                 }
             }
-            if (req.body.status=='2')
-                        data.findAll{
-                            where {
-                                data.ispublish:false
-                            }
-                        }
-            if (timeorder){
-            data.findAll({
-                'order': "createtime DESC"
+            var data2=await _model.findAndCountAll(answer, con);
+            body2.answersheetnumber=data2.count;
+            result.push(body2);
+        }
+        body.result=result;
+        if (req.body.timeorder==true){
+            result.sort(function (a, b) {
+                if (a.creaetime < b.creaetime) {
+                    return 1;
+                } else if (a.creaetime == b.creaetime) {
+                    return 0;
+                } else {
+                    return -1;
+                }
             });
+        }
+        else {
+            body.sort(function (a, b) {
+                if (a.creaetime < b.creaetime) {
+                    return -1;
+                } else if (a.creaetime == b.creaetime) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            });
+        }
+    }
+    catch(e){
+        body.code='02';
+        body.message=e.message;
+    }
+    finally{
+        res.json(body);
+    }
+    }
+
+    change-status:async function (req, res){
+        var body={code:'01',result:'success'};
+        var id=req.body.paperid;
+        try{
+            var condition={
+                where :{
+                    paperid: req.body.paperid
+                }
+            };
+            var data = await _model.findOne(questionnaires, condition);
+            if (data.ispublish){
+                data.ispublish=false;
             }
             else {
-                data.findAll({
-                                'order': "~createtime DESC"
-                            });
+                data.ispublish=true;
             }
-           // var t={paperid:'',papertitle:'',ispublish:''};
-            for (let i=0;i<data.length;i++)
-            {
-                answer-sheet.findAndCountAll({
-                    while :{paperid:data[i].paperid }
-                })
-                .then(result=>{
-                data[i]+="answersheetnumber:"+result.count+',';
-                })
-            }
-            res.json(data);
-        }else {
         }
-    }).catch(function(err){
-              console.log('err'+ err);
-          });
+        catch(e){
+            body.code='02';
+            body.result=e.message;
+        }
+        finally{
+            res.json(body);
+        }
     }
 
-    change-status:async function (req, res, next){
-        var id=req.body.paperid;
-        User.update({ispublish:!ispublish}, {where: {paperid: id}})
+    delete-questionnaires:async function (req, res){
+        var body={code:'01',result:'success'};
+        try{
+            var condition={
+                where :{
+                    paperid: req.body.paperid
+                }
+            };
+            await _model.deleteAll(questionnaires, condition);
+        }
+        catch(e){
+            body.code='02';
+            body.message=e.message;
+        }
+        finally{
+            res.json(body);
+        }
     }
 
-    post-questionnaire:async function (req, res, next){
+    post-new-questionnaire:async function (req, res){
+        var body={code:'01',result:'success'};
+        try{
         var newquestionnaire={paperid:'',questiontitle:'',ispublish:'',userid:'',creaetime:''};
         newquestionnaire.paperid=req.body.paperid;
         newquestionnaire.questiontitle=req.body.questiontitle;
         newquestionnaire.ispublish=req.body.ispublish;
-        newquestionnaire.userid=req.body.userid;
-        models.questionnaires.create(newquestionnaire) .then(function (msg) {
-            var shang=msg.userid;
-        }
+        newquestionnaire.creaetime=req.body.creaetime;//这个在数据生成的时候会自动生成的吧
+        newquestionnaire.userid=req.body.userid;//这个应该是必须的。
+        var data1=await _model.create(questionnaires, newquestionnaire);
         var ques=req.body.questions;
         for (let i=0;i<ques.length;i++)
         {
@@ -89,25 +129,35 @@ module.exports = {
             que.questionid=ques[i].questionid;
             que.questiontitle=ques[i].questiontitle;
             que.ismust=ques[i].ismust;
-            que.paperid=shang;
+            que.paperid=data1.paperid;
             if (ques.type==1) {
                 que.max=ques.max;
                 que.min=ques.min;
             }
-            models.question.create(newquestionnaire);
+            var data2=await _model.create(question, ques);
             var op=ques.options;
             for (let j=0;j<op.length();j++){
-                models.options.create(op[j]);
+                var data3=await _model.create(option, op[j]);
             }
         }
-    }
+        }
+        catch(e){
+            body.code='02';
+            body.message=e.message;
+        }
+        finally{
+            res.json(body);
+        }
+    } 
 
-    questionnaire.belongsTo(question)
-    question.belongsTo(options)
-    question.hasMany(questionnaire)
-    options.hasMany(question)
-    get-questionnaire-to-answer:async function (req, res, next){
-        questionnaire.findAll({
+    questionnaire.belongsTo(question);
+    question.belongsTo(options);
+    question.hasMany(questionnaire);
+    options.hasMany(question);
+    get-questionnaire-to-answer:async function (req, res){
+        var body={code:'01',result:'success'};
+        try{
+        var data=questionnaire.findAll({
             include:[{
                 where:{
                     paperid:req.body.paperid
@@ -116,8 +166,15 @@ module.exports = {
                 model:options
                 }]
             }]
-        }).then(function(questionnaire)){
-            res.json(questionnaire);
+        })
+        body.result=data;
+        }
+        catch(e){
+            body.code='02';
+            body.message=e.message;
+        }
+        finally{
+            res.json(body);
         }
     }
 }
