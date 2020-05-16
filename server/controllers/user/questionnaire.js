@@ -77,12 +77,7 @@ module.exports = {
                 }
             };
             var data = await _model.findOne(questionnaires, condition);
-            if (data.ispublish){
-                data.ispublish=false;
-            }
-            else {
-                data.ispublish=true;
-            }
+            await _model.update(questionnaires,{ispublish:!data.ispublish}, condition);
         }
         catch(e){
             body.code='02';
