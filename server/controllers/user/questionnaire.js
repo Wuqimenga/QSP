@@ -34,7 +34,7 @@ module.exports = {
             body2.answersheetnumber=data2.count;
             result.push(body2);
         }
-        body.result=result;
+       
         if (req.body.timeorder==true){
             result.sort(function (a, b) {
                 if (a.creaetime < b.creaetime) {
@@ -57,6 +57,7 @@ module.exports = {
                 }
             });
         }
+        body.result=result;
     }
     catch(e){
         body.code='02';
@@ -101,6 +102,7 @@ module.exports = {
                     paperid: req.body.paperid
                 }
             };
+            await _model.deleteAll(answer, condition);
             await _model.deleteAll(questionnaires, condition);
         }
         catch(e){
@@ -150,23 +152,26 @@ module.exports = {
         }
     } 
 
-    questionnaire.belongsTo(question);
-    question.belongsTo(options);
-    question.hasMany(questionnaire);
-    options.hasMany(question);
+    
     get-questionnaire-to-answer:async function (req, res){
         var body={code:'01',result:'success'};
         try{
-        var data=questionnaire.findAll({
+        questionnaire.belongsTo(question);
+        question.belongsTo(options);
+        question.hasMany(questionnaire);
+        options.hasMany(question);
+        var condition={
             include:[{
                 where:{
                     paperid:req.body.paperid
                 }
-                model:question,include:[{
-                model:options
+                model:question,
+                include:[{
+                   model:options
                 }]
             }]
-        })
+        }
+        var data = await _model.findAll(questionnaire, condition);
         body.result=data;
         }
         catch(e){
