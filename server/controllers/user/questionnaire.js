@@ -7,7 +7,6 @@ const answer=require('../models').answer;
 module.exports = {
     get-questionnaires:async function (req, res) {
     var body={code:'01',result:''};
-    var result
     var condition={
         attributes:['paperid','papertir','ispublish','creamtime'],
         where :{
