@@ -3,12 +3,13 @@ const questionnaires = require('../models').questionnaires;
 const question = require('../models').question;
 const option = require('../models').option;
 const answer=require('../models').answer;
+const op=
 
 module.exports = {
-    get-questionnaires:async function (req, res) {
+    get_questionnaires:async function (req, res) {
     var body={code:'01',result:''};
     var condition={
-        attributes:['paperid','papertir','ispublish','creamtime'],
+        attributes:['paperid','papertitle','ispublish','creamtime'],
         where :{
             userid:req.body.userid,
             questionnairestitle:req.body.questionnairestitle
@@ -65,9 +66,9 @@ module.exports = {
     finally{
         res.json(body);
     }
-    }
+    },
 
-    change-status:async function (req, res){
+    change_status:async function (req, res){
         var body={code:'01',result:'success'};
         var id=req.body.paperid;
         try{
@@ -77,7 +78,12 @@ module.exports = {
                 }
             };
             var data = await _model.findOne(questionnaires, condition);
-            await _model.update(questionnaires,{ispublish:!data.ispublish}, condition);
+            if (data.ispublish){
+                data.ispublish=false;
+            }
+            else {
+                data.ispublish=true;
+            }
         }
         catch(e){
             body.code='02';
@@ -86,9 +92,9 @@ module.exports = {
         finally{
             res.json(body);
         }
-    }
+    },
 
-    delete-questionnaires:async function (req, res){
+    delete_questionnaires:async function (req, res){
         var body={code:'01',result:'success'};
         try{
             var condition={
@@ -106,9 +112,9 @@ module.exports = {
         finally{
             res.json(body);
         }
-    }
+    },
 
-    post-new-questionnaire:async function (req, res){
+    post_new_questionnaire:async function (req, res){
         var body={code:'01',result:'success'};
         try{
         var newquestionnaire={paperid:'',questiontitle:'',ispublish:'',userid:'',creaetime:''};
@@ -144,11 +150,11 @@ module.exports = {
         finally{
             res.json(body);
         }
-    } 
+    }, 
 
     
-    get-questionnaire-to-answer:async function (req, res){
-        var body={code:'01',result:'success'};
+    get_questionnaire_to_answer:async function (req, res){
+        var body={code:'01',result:''};
         try{
         questionnaire.belongsTo(question);
         question.belongsTo(options);
@@ -158,7 +164,7 @@ module.exports = {
             include:[{
                 where:{
                     paperid:req.body.paperid
-                }
+                },
                 model:question,
                 include:[{
                    model:options
@@ -167,6 +173,21 @@ module.exports = {
         }
         var data = await _model.findAll(questionnaire, condition);
         body.result=data;
+        }
+        catch(e){
+            body.code='02';
+            body.message=e.message;
+        }
+        finally{
+            res.json(body);
+        }
+    },
+
+    search_questionnaire:async function (req, res){  
+        var body={code:'01',result:''};
+        try{
+            var data = await _model.findByname(questionnaire, req.body.papertitle);
+            body.result=data;
         }
         catch(e){
             body.code='02';
