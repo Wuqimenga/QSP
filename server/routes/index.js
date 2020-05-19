@@ -30,5 +30,5 @@ router.use(function(req, res, next) {
 });
 router.post('/login', userContoller.login);
 router.post('/register', userContoller.register);
-router.post('/get-questionnaires',userContoller.get);
+router.post('/get-statics',userContoller.get);
 module.exports=router;
