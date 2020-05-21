@@ -19,7 +19,7 @@
 
 
 <script type="text/ecmascript-6">
-  import QRCode from 'qrcodejs2'
+  // import QRCode from 'qrcodejs2'
   import * as qrcode from "jsonwebtoken";
 
   export default {

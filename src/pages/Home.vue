@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-
-        <vheader content="主页" :backRouter="this.$router"/>
-
+    <!-- 这个按钮可以放在问卷列表里面，需要获取问卷id -->
+    <!-- <el-button @click="fixQuestionnaire(paperid)">修改</el-button> -->
+    
+    <vheader content="主页" :backRouter="this.$router"/>
     <div style="margin-top:calc(1vh)">
       <el-row type="flex" justify="center" align="center">
         <el-col :xs="20" :lg="10">
@@ -114,7 +115,8 @@ export default {
   },
   created() {
     //先从本地存储提取userid;
-    this.querylist.userId = this.$route.query.userid;
+    // this.querylist.userId = this.$route.query.userid;
+    this.querylist.userId = 100;
     //根据userid观察有没有意外退出未保存的问卷数据
     let unsavedQuestionnaire = localStorage.getItem(
       this.querylist.userId + "Edit"
@@ -178,6 +180,11 @@ export default {
       });
   },
   methods: {
+    // 修改问卷
+    fixQuestionnaire(paperid){
+      window.localStorage.clear();
+      this.$router.push({path:"/edit",query:{paperid:paperid}});
+    },
     exploreAction: function() {
       //传问卷名字给后台，后台返回问卷的整体信息，在按钮下面以卡片的形式存在
       this.querylist.explore = true;
@@ -213,7 +220,7 @@ export default {
       } else {
         this.querylist.status = "1";
       }
-          api
+      api
       .GetQuestionnaires(this.querylist)
       .then(res => {
         if (res.code === "01") {
@@ -269,9 +276,8 @@ export default {
       });
     },
     createQuestionnaire: function() {
-      localStorage.clear();
       this.$router.push({
-        name: "Edit",
+        name: "Model",
         query: { userId: this.querylist.userId }
       });
     },
