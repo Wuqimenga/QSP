@@ -360,4 +360,97 @@
 
     
 
+
+* '/get-questionnaire'，修改问卷
+
+  * 前端>>后端
+
+    ``` json
+    paperid:// 问卷编号
+    ```
+
+  * 后端>>前端
+
+    ``` json
+    {
+        
+        questionId//目前问卷最大的问题id编号，int类型，用来在添加性题目时进行编号
+        
+        formData:{
+            paperid//问卷id
+            ispublish:false//默认值
+            userid//用户id
+            createtime: //创建时间
+            questiontitle://问卷标题
+            questions: [{
+                /* 单选题 */
+                show: false//默认值
+                questionid://题目id
+                topicid:0 //题目类型
+                questiontitle://题目标题
+                err: false,//默认值
+                ismust: //是否必答
+                rela: {
+                    question_id: //被关联的问题id
+                    option_index: //被关联问题的选项id
+                },
+                options: [{
+                    scontent: //选项内容
+                    goquestion: []//默认值
+                }]
+            }, {
+                /* 多选题 */
+                show: false,//默认值
+                questionid//题目id
+                topicid:1,//题目类型
+                questiontitle//题目标题
+                err: false//默认值
+                ismust//是否必答
+                rela: {
+                    question_id: //被关联的问题id
+                    option_index: []//被关联问题的选项id
+                },
+                min: //最少选择数
+                max: //最多选择数
+                options: [{
+                    scontent//选项内容
+                }]
+            }, {
+                /* 填空题 */
+                show: false,//默认值
+                questionid//问题id
+                topicid:2,//问题类型
+                questiontitle//问题标题
+                err: false,//默认值
+                ismust//是否必填
+                rela: {
+                    question_id: //被关联的问题id
+                    option_index: []//被关联问题的选项id
+                },
+                scontent: ""//默认值
+            }]
+        }
+    }
+    ```
+
+    :ballot_box_with_check:示例:
+
+    rela容易和goquestion混淆，下面对rela属性进行示例。rela与goquestion同样起到标记关联关系的作用，只是他们设置的对象不一样。
+
+    [questionid=1]   1.问题一[单选]：A.[selectid=1] B.[selectid=2] C.[selectid=3]
+
+    [questionid=2]   2.问题二[任何类型的题目]  
+
+    * 逻辑设置为：当选择**问题一**的B、C选项时，显示问题二。
+
+    * 对于**问题2**，它的rela设置为：
+
+    ``` json
+    rela: {
+                question_id: 2//被关联的问题id
+                option_index: [2,3]//被关联问题的选项id
+            },
+    ```
+
+    
     
