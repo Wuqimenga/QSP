@@ -10,8 +10,15 @@
         border>
         <el-table-column label="序号" type="index" :index="indexMethod" width="50px">
         </el-table-column>
-        <el-table-column prop="createdTime" label="创建时间"></el-table-column>
+        <el-table-column prop="anstime" label="创建时间"></el-table-column>
+        <el-table-column prop="IP" label="ip地址"></el-table-column>
         <el-table-column prop="location" label="ip地址"></el-table-column>
+        <el-table-column>
+          <template slot-scope="scope">
+            <el-button class="deleteBut" @click="deleteAction(scope.$index)">删除</el-button>
+          </template>
+        </el-table-column>
+
       </el-table>
       <el-pagination
         v-if="ansData"
@@ -30,7 +37,7 @@
 <script>
     //Result.vue//参考设计稿的统计页面，提交问卷id，返回问卷的总体填写信息，问卷id参考share
     import api from "../fetch/api";
-    // import answerData from "../../static/answerData"
+    import answerData from "../../static/answerData"
 
     export default {
         name: "Result",
@@ -38,12 +45,14 @@
         data(){
             //返回数据：id
             return{
-              userId:this.$route.params.userId,
+              //userId:this.$route.params.userId,
+
+              paperId:this.$route.params.paperid,//问卷id
               //数组形式
               ansData:[],
               pageSize: 12,//每一页的记录数量
               currentPage: 1,//默认从第一页开始浏览
-
+              thisList:0,
             }
         },
 
@@ -54,19 +63,31 @@
 
         //后台传入数据的时候使用，为ansData赋值
         created() {
-          if(window.localStorage.getItem(this.userId)+"Result")
-          {
-            this.ansData=JSON.parse(window.localStorage.getItem(this.userId+"Result"));
-          }
+          api
+            .GetStatics(this.paperId)// 提交问卷id到后端
+            .then(res =>{
+              if(res.code == "01"){
+                this.ansData=res.result;
+              }else{
+                this.$alert(res.result,"无法获取答卷列表",{
+                  confirmButtonText:"确定"
+                });
+              }
+            })
+            .catch(error =>{
+              console.log(error);
+            });
         },
 
         components:{},
 
         methods:{
+
           //数组赋值，测试数据时用
           /*getAnswerData(){
             this.ansData=answerData.answerData;
           },*/
+
           back(){this.$route.go(-1);},
 
           //表格项目样式
@@ -93,6 +114,46 @@
           //实现翻页后序号递增
           indexMethod(index){
             return (index+1)+(this.currentPage-1)*this.pageSize;
+          },
+
+          //删除答卷
+          deleteAction:function(index){
+
+            this.$confirm('删除该答卷？','提示',{
+              confirmButtonText:'确定',
+              cancelButtonText:'取消',
+              type:'warning'
+            })
+            .then(()=>{
+              //从页面上删除答卷
+              var paperId = this.ansData[index].paperid;
+              var IP = this.ansData[index].IP;
+              this.ansData.splice(index,1);
+              console.log(JSON.stringify(this.ansData));
+
+              //调用api接口，将删除后的数据写进后端数据库
+              api
+              .DeleteAnswer(paperId,IP)
+              .then(res=>{
+                if(res.code == '01'){
+                  this.$router.go(-1);
+                }else {
+                  this.$alert(res.result,"删除失败",{
+                    confirmButtonText:'确定'
+                  });
+                }
+              })
+              .catch(error=>{
+                console.log(error);
+              })
+            })
+            .catch(()=>{
+              this.$message({
+                type:'info',
+                message:'已取消删除'
+              });
+            });
+
           }
         }
     }

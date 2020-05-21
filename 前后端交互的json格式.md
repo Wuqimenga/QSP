@@ -1,4 +1,4 @@
-+ 说明
+﻿+ 说明
 
   + 此文档主要说明code为01的时候，result里面放的json数据，还有前端传给后端的params里面的json结构.
   + 改变问卷发布状态和删除问卷的没有包含进来，在result里面放的数据没有要交互的
@@ -132,13 +132,26 @@
 
     ```json
     {
-    ip://用户ip
+    IP://用户ip
     anstime://提交时间
+    paperid://问卷id
+    location://ip所属地区
     }
     ```
 
++ '/delete-answer',删除某份问卷某ip的答卷
 
+  + 前端>>后端
 
+    ```json
+    {
+    paperid://问卷id
+    ip://回答问卷的ip
+    }
+    ```
+
+  + 后端>>前端：无
+	
 
 + '/post-new-questionnaire'，提交新创建的问卷
 

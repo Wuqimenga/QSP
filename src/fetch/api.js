@@ -1,4 +1,4 @@
-import axios from 'axios'
+﻿import axios from 'axios'
 import qs from 'qs'
 // axios 配置
 axios.defaults.timeout = 5000;
@@ -116,6 +116,15 @@ export default {
     {
       return fetch('/get-statics',params)
     },
+
+    /* *
+    *删除问卷下某份答卷
+    */
+    DeleteAnswer(params)
+    {
+      return fetch('/delete-answer',params)
+    },
+
     /* *
      *改变问卷的发布状态
      */
