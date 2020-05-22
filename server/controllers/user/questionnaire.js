@@ -3,7 +3,6 @@ const questionnaires = require('../models').questionnaires;
 const question = require('../models').question;
 const option = require('../models').option;
 const answer=require('../models').answer;
-const op=
 
 module.exports = {
     get_questionnaires:async function (req, res) {
@@ -188,6 +187,100 @@ module.exports = {
         try{
             var data = await _model.findByname(questionnaire, req.body.papertitle);
             body.result=data;
+        }
+        catch(e){
+            body.code='02';
+            body.message=e.message;
+        }
+        finally{
+            res.json(body);
+        }
+    },
+
+    get_questionnaire:async function (req, res){
+        var body={code:'01',result:''};
+        try{
+            var data=await _model.findById(questionnaires,req.body.paperid);
+            var body={paperid:'',ispublish:'',userid:'',creaetime:'',questiontitle:'',questions:''};
+            body.paperid=data.paperid;
+            body.ispublish=data.ispublish;
+            body.userid=data.userid;
+            body.creaetime=data.creaetime;
+            body.questiontitle=data.questiontitle;
+            var data1=await _model.findById(question,data.paperid); // 问题
+            var ques=[];
+            for (let i=0;i<data1.length;i++)
+            {
+                if (data1[i].topicid==0){
+                    var qu={show:false,questionid:data1.questionid,topicid:'0',questiontitle:data1.questiontitle,err:false,ismust:data1.ismust,rela:'',options:''};
+                    var condition={
+                        where :{
+                            paperid:data1.paperid,
+                            goquestion:data1.questionid
+                        }
+                    }
+                    var op=await _model.findAll(option, condition);
+                    var re={question_id:op.questionid,option_index:op.selectid};
+                    var condition2={
+                        where :{
+                            paperid:data1.paperid,
+                            questionid:data1.questionid
+                        },
+                        attributes:['scontent','goquestion'],
+                    }
+                    var op2=await _model.findAll(option, condition2);
+                    qu.rela=re;
+                    qu.options=op2;
+                    ques.push(qu);
+                }
+                if (data1[i].topicid==1){
+                    var qu={show:false,questionid:data1.questionid,topicid:'1',questiontitle:data1.questiontitle,err:false,ismust:data1.ismust,rela:'',min:data1.min,max:data1.max,options:''};
+                    var condition={
+                        where :{
+                            paperid:data1.paperid,
+                            goquestion:data1.questionid
+                        }
+                    }
+                    var op=await _model.findAll(option, condition);
+                    var re={question_id:op.questionid,option_index:op.selectid};
+                    var condition2={
+                        where :{
+                            paperid:data1.paperid,
+                            questionid:data1.questionid
+                        },
+                        attributes:['scontent'],
+                    }
+                    var op2=await _model.findAll(option, condition2);
+                    qu.rela=re;
+                    qu.options=op2;
+                    ques.push(qu);
+                }
+                if (data1[i].topicid==3){
+                    var qu={show:false,questionid:data1.questionid,topicid:'2',questiontitle:data1.questiontitle,err:false,ismust:data1.ismust,rela:''};
+                    var condition={
+                        where :{
+                            paperid:data1.paperid,
+                            goquestion:data1.questionid
+                        }
+                    }
+                    var op=await _model.findAll(option, condition);
+                    var re={question_id:op.questionid,option_index:op.selectid};
+                    qu.rela=re;
+                    ques.push(qu);
+                }
+            }
+            ques.sort(function (a, b) {
+                if (a.questionid < b.questionid) {
+                    return 1;
+                } else if (a.creaetime == b.creaetime) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            });
+            body.questions=ques;
+            var result={questionld:ques.pop().paperid,formData:body};
+            body.result=result;
         }
         catch(e){
             body.code='02';
