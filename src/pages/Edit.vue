@@ -334,7 +334,7 @@ export default {
     //         // 发送断网提示
     //         this.$message({
     //             message:"网络连接不可用",
-    //             type:"warning"
+    //             type:"info"
     //         })
     //     })
     //     addEventListener("online",()=>{
@@ -450,7 +450,7 @@ export default {
             {
                 this.$message({
                     message:"第一题不能设置逻辑关联",
-                    type:"warning"
+                    type:"info"
                 })
                 return;
             };
@@ -559,7 +559,7 @@ export default {
                 {
                     this.$message({
                         message:"题目关联"+i+"题，不能删除！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -575,7 +575,7 @@ export default {
                 {
                     this.$message({
                         message:"被上一题关联，不能移动！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -594,7 +594,7 @@ export default {
                 {
                     this.$message({
                         message:"关联下一题，不能移动！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -611,7 +611,7 @@ export default {
             {
                 this.$message({
                     message:"被前面题目关联，不能移动到最前！",
-                    type:"warning",
+                    type:"info",
                 })
                 return;
             }
@@ -628,7 +628,7 @@ export default {
                 {
                     this.$message({
                         message:"关联后面的题目，不能移动到最后！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
