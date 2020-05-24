@@ -1,4 +1,4 @@
-+ 说明
+﻿+ 说明
 
   + 此文档主要说明code为01的时候，result里面放的json数据，还有前端传给后端的params里面的json结构.
   + 改变问卷发布状态和删除问卷的没有包含进来，在result里面放的数据没有要交互的
@@ -54,7 +54,7 @@
     status: "0",//0表示全部问卷，1表示已发布的问卷，2表示未发布的问卷
     timeorder: true,//true代表正序，false代表反序
     explore: false,//true代表对questionnairename为标题的问卷进行搜索，false代表不进行搜索
-    questionnairename: ""//要搜索的问卷标题
+    papertitle: ""//要搜索的问卷标题
     }
     ```
 
@@ -132,13 +132,26 @@
 
     ```json
     {
-    ip://用户ip
+    IP://用户ip
     anstime://提交时间
+    paperid://问卷id
+    location://ip所属地区
     }
     ```
 
++ '/delete-answer',删除某份问卷某ip的答卷
 
+  + 前端>>后端
 
+    ```json
+    {
+    paperid://问卷id
+    ip://回答问卷的ip
+    }
+    ```
+
+  + 后端>>前端：无
+	
 
 + '/post-new-questionnaire'，提交新创建的问卷
 
@@ -229,6 +242,7 @@
                     {
                         selectid://选项编号
                         scontent:// 选项内容
+                        goquestion://逻辑关联
                     },
                     ...
                 ]
@@ -347,4 +361,97 @@
 
     
 
+
+* '/get-questionnaire'，修改问卷
+
+  * 前端>>后端
+
+    ``` json
+    paperid:// 问卷编号
+    ```
+
+  * 后端>>前端
+
+    ``` json
+    {
+        
+        questionId//目前问卷最大的问题id编号，int类型，用来在添加性题目时进行编号
+        
+        formData:{
+            paperid//问卷id
+            ispublish:false//默认值
+            userid//用户id
+            createtime: //创建时间
+            questiontitle://问卷标题
+            questions: [{
+                /* 单选题 */
+                show: false//默认值
+                questionid://题目id
+                topicid:0 //题目类型
+                questiontitle://题目标题
+                err: false,//默认值
+                ismust: //是否必答
+                rela: {
+                    question_id: //被关联的问题id
+                    option_index: //被关联问题的选项id
+                },
+                options: [{
+                    scontent: //选项内容
+                    goquestion: []//默认值
+                }]
+            }, {
+                /* 多选题 */
+                show: false,//默认值
+                questionid//题目id
+                topicid:1,//题目类型
+                questiontitle//题目标题
+                err: false//默认值
+                ismust//是否必答
+                rela: {
+                    question_id: //被关联的问题id
+                    option_index: []//被关联问题的选项id
+                },
+                min: //最少选择数
+                max: //最多选择数
+                options: [{
+                    scontent//选项内容
+                }]
+            }, {
+                /* 填空题 */
+                show: false,//默认值
+                questionid//问题id
+                topicid:2,//问题类型
+                questiontitle//问题标题
+                err: false,//默认值
+                ismust//是否必填
+                rela: {
+                    question_id: //被关联的问题id
+                    option_index: []//被关联问题的选项id
+                },
+                scontent: ""//默认值
+            }]
+        }
+    }
+    ```
+
+    :ballot_box_with_check:示例:
+
+    rela容易和goquestion混淆，下面对rela属性进行示例。rela与goquestion同样起到标记关联关系的作用，只是他们设置的对象不一样。
+
+    [questionid=1]   1.问题一[单选]：A.[selectid=1] B.[selectid=2] C.[selectid=3]
+
+    [questionid=2]   2.问题二[任何类型的题目]  
+
+    * 逻辑设置为：当选择**问题一**的B、C选项时，显示问题二。
+
+    * 对于**问题2**，它的rela设置为：
+
+    ``` json
+    rela: {
+                question_id: 2//被关联的问题id
+                option_index: [2,3]//被关联问题的选项id
+            },
+    ```
+
+    
     

@@ -19,19 +19,15 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   redirect: '/login'
-    // },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
     },
       {
       path: '/home',
@@ -106,40 +102,12 @@ export default new Router({
     }
     }, 
     {
-      path: '/model',
-      name: 'Model',
-      component: Model,
-      meta: {
-        requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
-    }
+      path: '/',
+      redirect: '/login'
     },
- /*    
-    //这个页面没有使用-lyw
-    {
-      path: '/unconnected',
-      name: 'Unconnected',
-      component: Unconnected
-    },
-    */
+
+
 
   ]
 })
 
-
-//在路由之前，查看是否需要登录认证
-/*router.beforeEach((to, from, next) => {
-  if (to.matched.some(r => r.meta.requireAuth)) {
-      if (localStorage.getItem("token")) {
-          next();
-      }
-      else {
-          next({
-              path: '/login',
-              query: {redirect: to.fullPath}
-          })
-      }
-  }
-  else {
-      next();
-  }
-}) */

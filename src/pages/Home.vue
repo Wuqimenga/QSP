@@ -9,9 +9,9 @@
         <el-col :xs="20" :lg="10">
           <el-input
             @keyup.enter="exploreAction"
-            v-model="querylist.questionnaireName"
+            v-model="querylist.papertitle"
             placeholder="搜索问卷"
-          ></el-input>
+          ><el-button slot="append" icon="el-icon-search" @click="exploreAction()"></el-button></el-input>
         </el-col>
       </el-row>
     </div>
@@ -58,35 +58,34 @@
           <el-card
             v-for="(item,key) in list"
             :key="key"
-            v-if="true"
             :body-style="{ padding: '10px' }"
           >
             <div>
-              <span class="questionnaire-name">{{item.title}}</span>
+              <span class="questionnaire-name">{{item.papertitle}}</span>
               <ul class="header-ul-right">
-                <li class="li-right">id:{{item.paperID}}</li>
-                <li class="li-right">答卷:{{item.answersheetNumber}}</li>
-                <li class="li-right">{{item.createTime}}</li>
+                <li class="li-right">id:{{item.paperid}}</li>
+                <li class="li-right">答卷:{{item.answersheetnumber}}</li>
+                <li class="li-right">{{item.createtime}}</li>
                 <li class="li-right">
-                  <span v-if="item.isPublish">已发布</span>
-                  <span v-if="!item.isPublish">未发布</span>
+                  <span v-if="item.ispublish">已发布</span>
+                  <span v-if="!item.ispublish">未发布</span>
                 </li>
               </ul>
             </div>
             <div style="padding:calc(2vw)"></div>
             <ul class="footer-ul-right">
               <li class="li-right">
-                <span @click="changeStatus(item.isPublish)" v-if="!item.isPublish">发布</span>
-                <span @click="changeStatus(item.isPublish)" v-if="item.isPublish">暂停</span>
+                <span @click="changeStatus(item.paperid)" v-if="!item.ispublish">发布</span>
+                <span @click="changeStatus(item.paperid)" v-if="item.ispublish">暂停</span>
               </li>
               <li class="li-right">
-                <span @click="deleteAction(item.paperID)">删除</span>
+                <span @click="deleteAction(item.paperid)">删除</span>
               </li>
               <li class="li-right">
-                <span @click="shareAction(item.paperID)" v-if="item.isPublish">分享</span>
+                <span @click="shareAction(item.paperid)" v-if="item.ispublish">分享</span>
               </li>
               <li class="li-right">
-                <span @click="resultAction(item.paperID)">分析</span>
+                <span @click="resultAction(item.paperid)">分析</span>
               </li>
             </ul>
           </el-card>
@@ -102,11 +101,11 @@ export default {
   data() {
     return {
       querylist: {
-        userId: "",
+        userid: "",
         status: "0",
         timeorder: true,
         explore: false,
-        questionnaireName: ""
+        papertitle: ""
       }, //status中0代表请求全部的数据，1中代表请求已发布的数据，2代表请求未发布的数据,timeorder为true表示正序，timeorder为false为倒序，在后端先判断是否explore，然后判断status,再判断timeorder
       list: [
         //页面需要渲染的问卷列表
@@ -115,11 +114,10 @@ export default {
   },
   created() {
     //先从本地存储提取userid;
-    // this.querylist.userId = this.$route.query.userid;
-    this.querylist.userId = 100;
+    this.querylist.userid = this.$route.query.userid;
     //根据userid观察有没有意外退出未保存的问卷数据
     let unsavedQuestionnaire = localStorage.getItem(
-      this.querylist.userId + "Edit"
+      this.querylist.userid + "Edit"
     );
     if (unsavedQuestionnaire) {
       //有未保存的问卷
@@ -134,7 +132,7 @@ export default {
             .then(res => {
               if (res.code === "01") {
                 this.$message({ type: "info", message: "已保存问卷" });
-                localStorage.removeItem(this.querylist.userId + "Edit");
+                localStorage.removeItem(this.querylist.userid + "Edit");
               } else if (res.code === "03") {
                 //没退出页面过了一天之后，刷新页面后继续，要求重新登录
                 this.$router.push({ path: "/login", query: { no_token: 1 } });
@@ -147,7 +145,7 @@ export default {
             });
         })
         .catch(() => {
-          localStorage.removeItem(this.userId + "Edit");
+          localStorage.removeItem(this.userid + "Edit");
           this.$message({
             type: "info",
             message: "已取消删除"
@@ -165,7 +163,6 @@ export default {
           {
             this.list.splice(0, this.list.length);
           }
-          console.log(res.result);
           for (let i = 0; i < res.result.length; i++) {
             this.list.push(res.result[i]);
           }
@@ -188,6 +185,8 @@ export default {
     exploreAction: function() {
       //传问卷名字给后台，后台返回问卷的整体信息，在按钮下面以卡片的形式存在
       this.querylist.explore = true;
+      this.querylist.status="0";
+      this.querylist.timeorder="true";
       api
       .GetQuestionnaires(this.querylist)
       .then(res => {
@@ -197,7 +196,6 @@ export default {
           {
             this.list.splice(0, this.list.length);
           }
-          console.log(res.result);
           for (let i = 0; i < res.result.length; i++) {
             this.list.push(res.result[i]);
           }
@@ -229,7 +227,6 @@ export default {
           {
             this.list.splice(0, this.list.length);
           }
-          console.log(res.result);
           for (let i = 0; i < res.result.length; i++) {
             this.list.push(res.result[i]);
           }
@@ -282,7 +279,9 @@ export default {
       });
     },
     allQuestionnaire: function() {
+      this.querylist.explore=false;
       this.querylist.status = "0";
+      this.querylist.timeorder=true;
     api
       .GetQuestionnaires(this.querylist)
       .then(res => {
@@ -308,12 +307,14 @@ export default {
     },
     logOut: function() {
       this.$router.push({ path: "/login" });
+      localStorage.removeItem('token');
     },
-    deleteAction: function(paperID) {
+    deleteAction: function(paperid) {
       api
-        .DeleteQuestionnaire(paperID)
+        .DeleteQuestionnaire({paperid:paperid})
         .then(res => {
           if (res.code === "01") {
+            this.$router.go(0);
             this.$message({ type: "info", message: "删除成功" });
           } else if (res.code === "03") {
             this.$router.push({ path: "/login", query: { no_token: 1 } });
@@ -326,24 +327,25 @@ export default {
         });
     },
 
-    shareAction: function(paperID) {
+    shareAction: function(paperid) {
       this.$router.push({
         name: "Share",
-        params: { userId: this.querylist.userId, paperID: paperID }
+        params: { userid: this.querylist.userid, paperid: paperid }
       });
     },
 
-    resultAction: function(paperID) {
+    resultAction: function(paperid) {
       this.$router.push({
         name: "Result",
-        params: { userId: this.querylist.userId, paperID: paperID }
+        params: { userid: this.querylist.userid, paperid: paperid }
       });
     },
-    changeStatus: function(paperID) {
+    changeStatus: function(paperid) {
       api
-        .ChangeReleaseStatus(paperID)
+        .ChangeReleaseStatus({paperid:paperid})
         .then(res => {
           if (res.code === "01") {
+            this.$router.go(0);
             this.$message({ type: "info", message: "修改成功" });
           } else if (res.code === "03") {
             this.$router.push({ path: "/login", query: { no_token: 1 } });
@@ -358,7 +360,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style  scoped>
 .el-input-group__append .el-button {
   background-color: #409eff;
   color: aliceblue;

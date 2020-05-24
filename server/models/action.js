@@ -1,6 +1,5 @@
 //增删改查
 const _model = module.exports = {};
-const Op = Sequelize.Op;
 _model.findAndCountAll = async function (sequelize, condition) {
   return await sequelize.findAndCountAll(condition);
 }
@@ -21,21 +20,14 @@ _model.findById = async function (sequelize, id) {
   });
 };
 
-_model.findByname = async function (sequelize, papertitle){  // 模糊查询
-  return await sequelize.findAll({
-    where: {
-      papertitle: {
-        [Op.like]:'%' +papertitle + '%'
-      }
-    },
-  })
-}
+
+
 
 _model.create = async function (sequelize, model) {
   return await sequelize.create(model);
 };
 
-// UPDATE bannars_bannar SET rank=2 WHERE id IN ('0','1')
+
 _model.update = async function (sequelize, setStatement, condition) {
   return await sequelize.update(setStatement, condition);
 }
@@ -54,4 +46,3 @@ _model.count= async function (sequelize, condition) {
 _model.build = function (sequelize,articles) {
   return sequelize.build(articles);
 }
-

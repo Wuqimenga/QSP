@@ -3,7 +3,8 @@ const jwt=require("jsonwebtoken");
 const config = require('../../config');
 // 建立 Router 物件
 const router = express.Router();
-var userContoller=require('../controllers/user')
+var userController=require('../controllers/user')
+var questionnaireController=require('../controllers/questionnaire')
 
 // 在每一个请求被处理之前都会执行的middleware
 router.use(function(req, res, next) {
@@ -21,14 +22,14 @@ router.use(function(req, res, next) {
     } else {
       return res.json({code:'03', result: 'No token provided.'})
     }
-  }else{
-    // 输出记录信息
-    console.log(req.method, req.url);
+  }else{   
     // 继续路由处理
     next();
   }
 });
-router.post('/login', userContoller.login);
-router.post('/register', userContoller.register);
-router.post('/get-questionnaires',userContoller.get);
+router.post('/login', userController.login);
+router.post('/register', userController.register);
+router.post('/get-questionnaires',questionnaireController.getQuestionnaires);
+router.post('/delete-questionnaire',questionnaireController.deleteQuestionnaires);
+router.post('/change-release-status',questionnaireController.changeStatus);
 module.exports=router;
