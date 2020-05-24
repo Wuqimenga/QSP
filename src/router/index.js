@@ -102,29 +102,11 @@ export default new Router({
     }
     }, 
     {
-<<<<<<< HEAD
       path: '/',
       redirect: '/login'
     },
 
 
-=======
-      path: '/model',
-      name: 'Model',
-      component: Model,
-      meta: {
-        requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
-    }
-    },
- /*    
-    //这个页面没有使用-lyw
-    {
-      path: '/unconnected',
-      name: 'Unconnected',
-      component: Unconnected
-    },
-    */
->>>>>>> 9762527b9daf8fb0a87369b1eb7040513cb71a86
 
   ]
 })

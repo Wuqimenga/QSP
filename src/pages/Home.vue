@@ -114,12 +114,7 @@ export default {
   },
   created() {
     //先从本地存储提取userid;
-<<<<<<< HEAD
     this.querylist.userid = this.$route.query.userid;
-=======
-    // this.querylist.userId = this.$route.query.userid;
-    this.querylist.userId = 100;
->>>>>>> 9762527b9daf8fb0a87369b1eb7040513cb71a86
     //根据userid观察有没有意外退出未保存的问卷数据
     let unsavedQuestionnaire = localStorage.getItem(
       this.querylist.userid + "Edit"
@@ -279,13 +274,8 @@ export default {
     },
     createQuestionnaire: function() {
       this.$router.push({
-<<<<<<< HEAD
-        name: "Edit",
-        query: { userid: this.querylist.userid }
-=======
         name: "Model",
         query: { userId: this.querylist.userId }
->>>>>>> 9762527b9daf8fb0a87369b1eb7040513cb71a86
       });
     },
     allQuestionnaire: function() {

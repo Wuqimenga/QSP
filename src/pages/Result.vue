@@ -35,7 +35,7 @@
 </template>
 
 <script>
-/*     //Result.vue//参考设计稿的统计页面，提交问卷id，返回问卷的总体填写信息，问卷id参考share
+     //Result.vue//参考设计稿的统计页面，提交问卷id，返回问卷的总体填写信息，问卷id参考share
     import api from "../fetch/api";
     import answerData from "../../static/answerData"
 
@@ -86,12 +86,8 @@
           //数组赋值，测试数据时用
           getAnswerData(){
             this.ansData=answerData.answerData;
-<<<<<<< HEAD
           },
-=======
-          },*/
 
->>>>>>> 9762527b9daf8fb0a87369b1eb7040513cb71a86
           back(){this.$route.go(-1);},
 
           //表格项目样式
@@ -160,7 +156,7 @@
 
           }
         }
-    } */
+    } 
 </script>
 
 <style scoped>
