@@ -7,12 +7,38 @@
     <el-form ref="rulesForm1" :rules="rules" :model="formData">
         <div class="edit-head-menu">
         <el-row :gutter="10">
-        <el-col :xs="24" :sm="24" :md="17" :lg="17" :xl="14">
-        <el-form-item prop="papertitle">
-            <el-input v-model="formData.papertitle" placeholder="请填写问卷标题"/>
-        </el-form-item>
+        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <p class="title">{{formData.papertitle}}</p>
         </el-col>
-        <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="5">
+        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <button
+            class="edit-btn"
+            @click="editVisible = true">
+                <i class="el-icon-edit-outline" style="font-size:25px"></i><br>
+                编辑标题
+            </button>
+            <!-- 问卷标题编辑浮窗 -->
+            <el-dialog
+            :before-close="editDialogClose"
+            title="提示"
+            :visible.sync="editVisible"
+            width="30%">
+            <!-- <el-form-item prop="templeTitle"> -->
+                <el-input 
+                show-word-limit
+                maxlength="51"
+                type = "textarea"
+                v-model="templeTitle"
+                placeholder="请填写问卷标题"/>
+                <p style="color:red" v-if="templeTitle==''">问卷标题不能为空</p>
+            <!-- </el-form-item> -->
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisible = false;templeTitle=formData.papertitle;">取 消</el-button>
+                <el-button type="primary" @click="editBtn()">确 定</el-button>
+            </span>
+            </el-dialog>
+        </el-col>
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
             <el-button 
             class="fill"
             type="primary" plain 
@@ -20,7 +46,7 @@
                 预览
             </el-button>
         </el-col>
-        <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="5">
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
             <el-button 
             class="fill"
             type="primary"
@@ -247,28 +273,31 @@ export default {
         return{
             modelType:this.$route.query.modelType,
             onLine:true,// 是否联网
+            editVisible:false,// 是否显示标题编辑浮窗
             dialogVisible:false,  // 编辑面板不显示
+            templeTitle:"",//临时标题，还没有被保存的标题
             formData:{
                 paperid:"",// 问卷id，等到保存问卷时，才在后端进行设置
                 ispublish:false,// 是否发布
                 userid:this.$route.query.userId,// 用户id,获取从Model传来的用户id
                 createtime:(new Date()).toLocaleDateString(),// 问卷创建时间
-                questiontitle:"问卷标题",
+                papertitle:"问卷标题",
                 questions:[]
             },
             rules:{
-                papertitle:[{required:true,message:'不能为空',trigger:'blur'},{max:51,message:'字数不能多于51',rigger:'blur'}],
-                question_title:[{required:true,message:'不能为空',trigger:'blur'},{max:51,message:'字数不能多于51',trigger:'blur'}],
+                templeTitle:[{required:true,message:'问卷标题不能为空',trigger:'blur'},{max:51,message:'字数不能多于51',rigger:'blur'}],
+                question_title:[{required:true,message:'题目不能为空',trigger:'blur'},{max:51,message:'字数不能多于51',trigger:'blur'}],
             }
         }
     },
     // 从localStorage 提取刷新前的数据
     created(){
-        this.formData.userid=this.$route.query.userId
-        console.log("localstorage:  "+this.$route.query.userId)
+        this.formData.userid=this.$route.query.userId;
+        console.log("created : "+this.templeTitle);
         if(localStorage.getItem(this.formData.userid+"Edit"))// 如果localStorage存有问卷表单数据
         {
             // 获取保存在localStorage的表单数据
+            console.log(this.formData.userid+"Edit");
             this.formData=JSON.parse(localStorage.getItem(this.formData.userid+"Edit"));
         }
         else// 如果没有保存说明是第一次进入，渲染问卷模板
@@ -281,9 +310,10 @@ export default {
                     ispublish:false,// 是否发布
                     userid:this.$route.query.userId,// 用户id,获取从Model传来的用户id
                     createtime:(new Date()).toLocaleDateString(),// 问卷创建时间
-                    questiontitle:"问卷标题",
+                    papertitle:"问卷标题",
                     questions:[]
                 }
+                this.editVisible=true;
             }
             else if(modelType==1)
             {
@@ -327,6 +357,10 @@ export default {
             }
         }
     },
+    mounted(){
+        this.templeTitle = this.formData.papertitle;
+        console.log("mounted: "+this.templeTitle);
+    },
     // // 网络状态判断
     // mounted(){
     //     addEventListener("offline",()=>{
@@ -334,7 +368,7 @@ export default {
     //         // 发送断网提示
     //         this.$message({
     //             message:"网络连接不可用",
-    //             type:"warning"
+    //             type:"info"
     //         })
     //     })
     //     addEventListener("online",()=>{
@@ -349,6 +383,8 @@ export default {
 
     // 数据发生变化时保存数据到localstorage，防止刷新之后数据消失
     updated(){
+        this.formData.userid=this.$route.query.userId;
+        console.log("updated : "+this.formData.userid+"Edit");
         window.localStorage.setItem(this.formData.userid+"Edit",JSON.stringify(this.formData));
     },
     methods:{
@@ -440,6 +476,25 @@ export default {
                 }
             });
         },
+        // 确认问卷标题
+        editBtn()
+        {
+            if(this.templeTitle!="")
+            {
+                this.formData.papertitle=this.templeTitle;
+                this.editVisible = false;
+            }
+            else
+            {
+                this.editVisible=true;
+            }
+        },
+        // 在没填写好标题前不能关闭确认问卷标题的按钮
+        editDialogClose()
+        {
+            this.editVisible = true;
+            
+        },
         // 编辑面板的显示和隐藏
         show_edit_panel(i){
             this.formData.questions[i].show=!(this.formData.questions[i].show)
@@ -450,7 +505,7 @@ export default {
             {
                 this.$message({
                     message:"第一题不能设置逻辑关联",
-                    type:"warning"
+                    type:"info"
                 })
                 return;
             };
@@ -559,7 +614,7 @@ export default {
                 {
                     this.$message({
                         message:"题目关联"+i+"题，不能删除！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -575,7 +630,7 @@ export default {
                 {
                     this.$message({
                         message:"被上一题关联，不能移动！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -594,7 +649,7 @@ export default {
                 {
                     this.$message({
                         message:"关联下一题，不能移动！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -611,7 +666,7 @@ export default {
             {
                 this.$message({
                     message:"被前面题目关联，不能移动到最前！",
-                    type:"warning",
+                    type:"info",
                 })
                 return;
             }
@@ -628,7 +683,7 @@ export default {
                 {
                     this.$message({
                         message:"关联后面的题目，不能移动到最后！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
