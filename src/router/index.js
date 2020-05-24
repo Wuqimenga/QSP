@@ -7,8 +7,9 @@ import Edit from '@/pages/Edit'
 import Preview from '@/pages/Preview'
 import Answer from '@/pages/Answer'
 import Done from '@/pages/Done'
-import Analysis from '@/pages/Analysis'
 
+import CrossOverAnalysis from '@/pages/CrossOverAnalysis'
+import Model from '@/pages/Model'
 import Share from '@/pages/Share'
 
 
@@ -36,7 +37,7 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
-      {
+    {
       path: '/share',
       name: 'Share',
       component: Share,
@@ -44,7 +45,7 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
-       {
+    {
       path: '/result',
       name: 'Result',
       component: Result,
@@ -52,24 +53,16 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
- /*    
-    //这个页面没有使用-lyw
     {
-      path: '/unconnected',
-      name: 'Unconnected',
-      component: Unconnected
-    },
-    */
-    {
-      path: '/analysis',
-      name: 'Analysis',
-      component: Analysis,
+      path: '/crossoveranalysis/:paperid',
+      name: 'CrossOverAnalysis',
+      component: CrossOverAnalysis,
       meta: {
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
     {
-      path: '/preview/:userId',
+      path: '/preview',
       name: 'Preview',
       component: Preview,
       meta: {
@@ -84,6 +77,14 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
+    // {
+    //   path: '/analysis',
+    //   name: 'Analysis',
+    //   component: Analysis,
+    //   meta: {
+    //     requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
+    // }
+    // },
     {
       path: '/done',
       name: 'Done',
@@ -101,11 +102,29 @@ export default new Router({
     }
     }, 
     {
+<<<<<<< HEAD
       path: '/',
       redirect: '/login'
     },
 
 
+=======
+      path: '/model',
+      name: 'Model',
+      component: Model,
+      meta: {
+        requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
+    }
+    },
+ /*    
+    //这个页面没有使用-lyw
+    {
+      path: '/unconnected',
+      name: 'Unconnected',
+      component: Unconnected
+    },
+    */
+>>>>>>> 9762527b9daf8fb0a87369b1eb7040513cb71a86
 
   ]
 })

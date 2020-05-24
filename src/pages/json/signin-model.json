@@ -1,0 +1,45 @@
+{
+	"paperid": 0,
+	"ispublish": false,
+	"createtime": "",
+	"questiontitle": "问卷标题",
+	"questions": [{
+		"show": true,
+		"questionid": 1,
+		"topicid": 2,
+		"questiontitle": "姓名：",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"scontent": ""
+	}, {
+		"show": true,
+		"questionid": 2,
+		"topicid": 2,
+		"questiontitle": "部门",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"scontent": ""
+	}, {
+		"show": true,
+		"questionid": 3,
+		"topicid": 2,
+		"questiontitle": "员工编号",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"scontent": ""
+	}],
+	"papertitle": "会议签到",
+	"ip": ""
+}

@@ -1,0 +1,228 @@
+{
+	"paperid": 0,
+	"ispublish": false,
+	"createtime": "",
+	"questiontitle": "问卷标题",
+	"questions": [{
+		"show": true,
+		"questionid": 5,
+		"topicid": 2,
+		"questiontitle": "你的专业是",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"scontent": ""
+	}, {
+		"show": true,
+		"questionid": 2,
+		"topicid": 0,
+		"questiontitle": "您的性别",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"options": [{
+			"scontent": "男",
+			"goquestion": [],
+			"selectid": 0
+		}, {
+			"scontent": "女",
+			"goquestion": [],
+			"selectid": 1
+		}]
+	}, {
+		"show": true,
+		"questionid": 3,
+		"topicid": 0,
+		"questiontitle": "以下哪项描述符合你毕业后的去向安排？",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"options": [{
+			"scontent": "就业",
+			"goquestion": [],
+			"selectid": 0
+		}, {
+			"scontent": "自主创业",
+			"goquestion": [],
+			"selectid": 1
+		}, {
+			"scontent": "专升本",
+			"goquestion": [],
+			"selectid": 2
+		}, {
+			"scontent": "出国",
+			"goquestion": [],
+			"selectid": 3
+		}, {
+			"scontent": "读研",
+			"goquestion": [],
+			"selectid": 4
+		}]
+	}, {
+		"show": false,
+		"questionid": 4,
+		"topicid": 0,
+		"questiontitle": "毕业后选择工作的城市",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"options": [{
+			"scontent": "学校附近",
+			"goquestion": [],
+			"selectid": 0
+		}, {
+			"scontent": "回乡",
+			"goquestion": [],
+			"selectid": 1
+		}, {
+			"scontent": "一线城市",
+			"goquestion": [],
+			"selectid": 2
+		}]
+	}, {
+		"show": false,
+		"questionid": 5,
+		"topicid": 0,
+		"questiontitle": "你以后是否想找专业对口的工作？",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"options": [{
+			"scontent": "是",
+			"goquestion": [],
+			"selectid": 0
+		}, {
+			"scontent": "否",
+			"goquestion": [],
+			"selectid": 1
+		}]
+	}, {
+		"show": false,
+		"questionid": 6,
+		"topicid": 0,
+		"questiontitle": "你最想通过什么方式就业？",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"options": [{
+			"scontent": "校方",
+			"goquestion": [],
+			"selectid": 0
+		}, {
+			"scontent": "找关系",
+			"goquestion": [],
+			"selectid": 1
+		}, {
+			"scontent": "靠自己",
+			"goquestion": [],
+			"selectid": 2
+		}]
+	}, {
+		"show": false,
+		"questionid": 7,
+		"topicid": 0,
+		"questiontitle": "是否在意公司男女比例？",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"options": [{
+			"scontent": "是",
+			"goquestion": [7, 8, 9],
+			"selectid": 0
+		}, {
+			"scontent": "否",
+			"goquestion": [],
+			"selectid": 1
+		}]
+	}, {
+		"show": false,
+		"questionid": 8,
+		"topicid": 0,
+		"questiontitle": "你认为实习期间多少薪水合理？",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"options": [{
+			"scontent": "2000以下",
+			"goquestion": [],
+			"selectid": 0
+		}, {
+			"scontent": "2000到3000",
+			"goquestion": [],
+			"selectid": 1
+		}, {
+			"scontent": "3000到4000",
+			"goquestion": [],
+			"selectid": 2
+		}, {
+			"scontent": "4000以上",
+			"goquestion": [],
+			"selectid": 3
+		}]
+	}, {
+		"show": false,
+		"questionid": 14,
+		"topicid": 1,
+		"questiontitle": "以下福利中，你希望公司拥有哪些福利？",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"min": 2,
+		"max": 4,
+		"options": [{
+			"scontent": "五险一金",
+			"selectid": 0
+		}, {
+			"scontent": "出国进修",
+			"selectid": 1
+		}, {
+			"scontent": "带薪休假",
+			"selectid": 2
+		}, {
+			"scontent": "节日福利",
+			"selectid": 3
+		}],
+		"ans": []
+	}, {
+		"show": false,
+		"questionid": 15,
+		"topicid": 2,
+		"questiontitle": "在实习阶段你最想得到什么？（能力或类或物质类请详细概括）",
+		"err": false,
+		"ismust": false,
+		"rela": {
+			"question_id": 7,
+			"option_index": [0]
+		},
+		"scontent": ""
+	}],
+	"papertitle": "大学生就业意向调查表",
+	"ip": ""
+}

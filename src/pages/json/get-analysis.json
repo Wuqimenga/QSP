@@ -1,0 +1,17 @@
+{
+    "result":
+    [
+        {
+          "questionid":1,
+          "questiontitle":"喜欢的颜色？"
+        },
+        {
+          "questionid":2,
+          "questiontitle":"是否常运动？"
+        },
+        {
+          "questionid":3,
+          "questiontitle":"性格如何？"
+        }
+    ]
+}

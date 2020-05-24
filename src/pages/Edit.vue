@@ -14,7 +14,7 @@
         </el-col>
         <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="5">
             <el-button 
-            class="big-btn"
+            class="fill"
             type="primary" plain 
             @click="toPreview()">
                 预览
@@ -22,7 +22,7 @@
         </el-col>
         <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="5">
             <el-button 
-            class="big-btn"
+            class="fill"
             type="primary"
             @click="onSubmit(formData)">
                 保存问卷
@@ -31,13 +31,13 @@
         </el-row>
         <el-row :gutter="10">
             <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-button @click="add_question(0)" :disabled="formData.questions.length>=30" class="big-btn">添加单选</el-button>
+            <el-button @click="add_question(0)" :disabled="formData.questions.length>=30" class="fill">添加单选</el-button>
             </el-col>
             <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-button @click="add_question(1)" :disabled="formData.questions.length >=30" class="big-btn">添加多选</el-button>
+            <el-button @click="add_question(1)" :disabled="formData.questions.length >=30" class="fill">添加多选</el-button>
             </el-col>
             <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-button @click="add_question(2)" :disabled="formData.questions.length>=30" class="big-btn">添加填空</el-button>
+            <el-button @click="add_question(2)" :disabled="formData.questions.length>=30" class="fill">添加填空</el-button>
             </el-col>
         </el-row>
         </div>
@@ -63,12 +63,12 @@
                     </el-form-item>
                 </div>
                 <div>
-                    <a @click="question_moveLast(i_q)"  class="edit-a">最后</a>
-                    <a @click="question_moveFirst(i_q)"  class="edit-a">最前</a>
-                    <a @click="question_moveDown(i_q)"   class="edit-a">下移</a>
-                    <a @click="question_moveUp(i_q)" class="edit-a">上移</a>
-                    <a @click="del_question(i_q)"  class="edit-a">删除</a>
-                    <a @click="show_edit_panel(i_q)"  class="edit-a">{{question.show?"隐藏":"编辑"}}</a>
+                    <a @click="question_moveLast(i_q)"  class="left-float">最后</a>
+                    <a @click="question_moveFirst(i_q)"  class="left-float">最前</a>
+                    <a @click="question_moveDown(i_q)"   class="left-float">下移</a>
+                    <a @click="question_moveUp(i_q)" class="left-float">上移</a>
+                    <a @click="del_question(i_q)"  class="left-float">删除</a>
+                    <a @click="show_edit_panel(i_q)"  class="left-float">{{question.show?"隐藏":"编辑"}}</a>
                 </div>
             </el-card>
 
@@ -149,7 +149,7 @@
                                 <el-col :xs="17" :sm="8" :md="8" :lg="8" :xl="8">
                                     <el-input-number 
                                         v-model="question.min" 
-                                        :min="2" 
+                                        :min="1" 
                                         :max="question.options.length">
                                     </el-input-number>
                                 </el-col>
@@ -164,7 +164,7 @@
                                     <el-input-number 
                                         v-model="question.max" 
                                         :value="question.min"
-                                        :min="question.min" 
+                                        :min="2" 
                                         :max="question.options.length">
                                     </el-input-number>
                                 </el-col>
@@ -204,7 +204,7 @@
                         </el-row>
                         <p>关联选项:</p>
                         <el-row>
-                            <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" push="3">
+                            <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :push="3">
                             <el-checkbox-group 
                                 v-model="question.rela.option_index"
                                 v-for="(ro,ri) in getOptions(question.rela.question_id)"
@@ -233,6 +233,11 @@
 
 <script>
 import api from "../fetch/api"
+import _test_fix from "./json/test-fix.json";// 引入测试问卷修改
+import _exam_model from "./json/exam-model.json";// 引入考试模板
+import _sigin_model from "./json/signin-model.json";//引入签到模板
+import _vote_model from "./json/vote-model.json";//引入投票模板
+import _investigation_model from "./json/investigation-model.json";//引入调查模板
 
 var questionId=0;// 由前端页面分配每个问题的id
 
@@ -240,12 +245,13 @@ export default {
    name:'Edit',
     data(){
         return{
+            modelType:this.$route.query.modelType,
             onLine:true,// 是否联网
             dialogVisible:false,  // 编辑面板不显示
             formData:{
-                paperid:0,// 问卷id，等到保存问卷时，才在后端进行设置
+                paperid:"",// 问卷id，等到保存问卷时，才在后端进行设置
                 ispublish:false,// 是否发布
-                userid:this.$route.query.userid,// 用户id
+                userid:this.$route.query.userId,// 用户id,获取从Model传来的用户id
                 createtime:(new Date()).toLocaleDateString(),// 问卷创建时间
                 questiontitle:"问卷标题",
                 questions:[]
@@ -256,26 +262,82 @@ export default {
             }
         }
     },
-    // 获取Home传来的用户id，暂时不填写问卷id，等保存之后才在后端申请问卷id
+    // 从localStorage 提取刷新前的数据
     created(){
-        
-        if(window.localStorage.getItem(this.userid+"Edit"))// 如果localStorage存有问卷表单数据
+        this.formData.userid=this.$route.query.userId
+        console.log("localstorage:  "+this.$route.query.userId)
+        if(localStorage.getItem(this.formData.userid+"Edit"))// 如果localStorage存有问卷表单数据
         {
             // 获取保存在localStorage的表单数据
-            this.formData=JSON.parse(window.localStorage.getItem(this.userid+"Edit"));
+            this.formData=JSON.parse(localStorage.getItem(this.formData.userid+"Edit"));
+        }
+        else// 如果没有保存说明是第一次进入，渲染问卷模板
+        {
+            var modelType = this.$route.query.modelType;
+            if(modelType==0)
+            {
+                this.formData={
+                    paperid:"",// 问卷id，等到保存问卷时，才在后端进行设置
+                    ispublish:false,// 是否发布
+                    userid:this.$route.query.userId,// 用户id,获取从Model传来的用户id
+                    createtime:(new Date()).toLocaleDateString(),// 问卷创建时间
+                    questiontitle:"问卷标题",
+                    questions:[]
+                }
+            }
+            else if(modelType==1)
+            {
+                this.formData=_investigation_model;
+            }
+            else if(modelType==2)
+            {
+                this.formData=_exam_model;
+            }
+            else if(modelType==3)
+            {
+                this.formData=_vote_model;
+            }
+            else if(modelType==4)
+            {
+                this.formData=_sigin_model;
+            }
+            else
+            {
+                // 根据获得的问卷id从后端获得要修改的问卷设置
+                api
+                    .PostNewQuestionnaire(this.$route.query.paperid)
+                    .then(res => {
+                        if(res.code == '01'){
+                            questionId = res.result.questionId;
+                            this.formData = res.result.formData;
+                        }else{
+                            this.$alert(res.result,"获取问卷失败",{
+                                confirmButtonText:"确定"
+                            });
+                        }
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                    })
+
+                // //模拟测试：
+                // alert(this.$route.query.paperid);
+                // questionId = 4;
+                // this.formData = _test_fix;
+            }
         }
     },
     // // 网络状态判断
     // mounted(){
-    //     window.addEventListener("offline",()=>{
+    //     addEventListener("offline",()=>{
     //         this.onLine=false;
     //         // 发送断网提示
     //         this.$message({
     //             message:"网络连接不可用",
-    //             type:"warning"
+    //             type:"info"
     //         })
     //     })
-    //     window.addEventListener("online",()=>{
+    //     addEventListener("online",()=>{
     //         if(this.onLine==false)// 如果是从断网状态恢复
     //         {
     //             // 从localStroage中获取历史数据
@@ -287,7 +349,7 @@ export default {
 
     // 数据发生变化时保存数据到localstorage，防止刷新之后数据消失
     updated(){
-        window.localStorage.setItem(this.userid+"Edit",JSON.stringify(this.formData));
+        window.localStorage.setItem(this.formData.userid+"Edit",JSON.stringify(this.formData));
     },
     methods:{
         // 提交数据前对数据进行处理，增加ip、to、ans属性，返回处理好的对象array，不改变原有的 this.formData
@@ -322,7 +384,7 @@ export default {
                     // 在formatData里添加ans，记录选择题的答案（所选选项的下标）
                     if(array.questions[i].topicid==0)// 如果是单选题
                     {
-                        array.questions[i].topicid=i;
+                        array.questions[i].questionid=i+1;
                     }
                     else if(array.questions[i].topicid==1)//如果是多选题
                     {
@@ -370,8 +432,8 @@ export default {
             this.$refs['rulesForm1'].validate(valid => {
                 if (valid) {
                     // 将处理好的数据保存在PreviewFormmData，方便预览界面使用
-                    window.localStorage.setItem(this.userid+"Pre",JSON.stringify(this.handleData(this.formData)))
-                    this.$router.push({name:"Preview",params:{userid:this.userid}});// 跳转到预览界面
+                    // localStorage.setItem(this.formData.userid+"Pre",JSON.stringify(this.handleData(this.formData)))
+                    this.$router.push({path:"/preview",query:{formData:this.handleData(this.formData)}});// 跳转到预览界面
                 } else {
                     console.log("error submit!!");
                     return false;
@@ -388,7 +450,7 @@ export default {
             {
                 this.$message({
                     message:"第一题不能设置逻辑关联",
-                    type:"warning"
+                    type:"info"
                 })
                 return;
             };
@@ -497,7 +559,7 @@ export default {
                 {
                     this.$message({
                         message:"题目关联"+i+"题，不能删除！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -513,7 +575,7 @@ export default {
                 {
                     this.$message({
                         message:"被上一题关联，不能移动！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -532,7 +594,7 @@ export default {
                 {
                     this.$message({
                         message:"关联下一题，不能移动！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }
@@ -549,7 +611,7 @@ export default {
             {
                 this.$message({
                     message:"被前面题目关联，不能移动到最前！",
-                    type:"warning",
+                    type:"info",
                 })
                 return;
             }
@@ -566,7 +628,7 @@ export default {
                 {
                     this.$message({
                         message:"关联后面的题目，不能移动到最后！",
-                        type:"warning",
+                        type:"info",
                     })
                     return;
                 }

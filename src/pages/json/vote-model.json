@@ -1,0 +1,101 @@
+{
+	"paperid": "",
+	"ispublish": false,
+	"createtime": "",
+	"questiontitle": "问卷标题",
+	"questions": [{
+		"show": false,
+		"questionid": 5,
+		"topicid": 0,
+		"questiontitle": "以下活动哪个最喜欢？",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": null,
+			"option_index": []
+		},
+		"options": [{
+			"scontent": "聚餐",
+			"goquestion": []
+		}, {
+			"scontent": "室内游戏",
+			"goquestion": []
+		}, {
+			"scontent": "室外运动",
+			"goquestion": []
+		}, {
+			"scontent": "唱K",
+			"goquestion": []
+		}, {
+			"scontent": "我只想休息",
+			"goquestion": []
+		}]
+	}, {
+		"show": false,
+		"questionid": 6,
+		"topicid": 1,
+		"questiontitle": "聚餐比较喜欢去哪？",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": 5,
+			"option_index": [0]
+		},
+		"min": 1,
+		"max": 4,
+		"options": [{
+			"scontent": "XX肥牛火锅"
+		}, {
+			"scontent": "小X烤串店"
+		}, {
+			"scontent": "XX美食街"
+		}, {
+			"scontent": "XX川菜馆"
+		}]
+	}, {
+		"show": false,
+		"questionid": 1,
+		"topicid": 1,
+		"questiontitle": "室内游戏喜欢哪些？",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": 5,
+			"option_index": [1]
+		},
+		"min": 1,
+		"max": 4,
+		"options": [{
+			"scontent": "桌游"
+		}, {
+			"scontent": "杀人游戏"
+		}, {
+			"scontent": "密室逃脱"
+		}, {
+			"scontent": "保龄球"
+		}]
+	}, {
+		"show": false,
+		"questionid": 2,
+		"topicid": 0,
+		"questiontitle": "比较喜欢哪项室外运动？",
+		"err": false,
+		"ismust": true,
+		"rela": {
+			"question_id": 5,
+			"option_index": [2]
+		},
+		"options": [{
+			"scontent": "爬山",
+			"goquestion": []
+		}, {
+			"scontent": "野炊",
+			"goquestion": []
+		}, {
+			"scontent": "滑雪",
+			"goquestion": []
+		}]
+	}],
+	"papertitle": "公司团建活动投票",
+	"ip": ""
+}

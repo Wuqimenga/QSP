@@ -10,7 +10,7 @@
           :key="i_q">
             <div v-if="question.show">
                 <p>
-                    <span style="color:red;">{{question.must==true?"*":""}}</span> 
+                    <span style="color:red;">{{question.ismust==true?"*":""}}</span> 
                     {{i_q+1}} . 
                     {{question.questiontitle}}
                     <span style="color:gray;">[{{question.topicid==0?"单选题":(question.topicid==1?"多选题":"填空题")}}]</span>
@@ -52,7 +52,7 @@
         </div>
         <el-button 
         type="primary" plain
-        class="big-btn"
+        class="fill"
         @click="onSubmit()">
             提交
         </el-button>
@@ -91,7 +91,7 @@ export default {
         singleWaring:function(questionq){
             return function(question){
                 
-                if(question.show&&question.must&&question.ans==null)
+                if(question.show&&question.ismust&&question.ans==null)
                 {
                     question.err=true;
                     return "本题必答";
@@ -104,7 +104,7 @@ export default {
         // 多选题所选选项数目限制提示
         multWaring:function(question){
             return function(question){
-                if(question.show&&question.must||question.ans.length>0)// 如果多选要求你必填，或已经选择了选项
+                if(question.show&&question.ismust||question.ans.length>0)// 如果多选要求你必填，或已经选择了选项
                 {
                     if(question.ans.length<question.min||question.max&&question.ans.length>question.max)
                     {
@@ -125,7 +125,7 @@ export default {
         // 填空题必填提示
         blankWarning:function(question){
             return function(question){
-                if(question.show&&question.must&&question.scontent=="")
+                if(question.show&&question.ismust&&question.scontent=="")
                 {
                     question.err=true;
                     return "此题必答";

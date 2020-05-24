@@ -1,0 +1,61 @@
+{
+    "paperid":1,
+    "ispublish":false,
+    "userid":100,
+    "createtime":"2020/8/7", 
+    "papertitle":"用来测试的问卷标题",
+    "questions": [{
+        "show": false,
+        "questionid":0,
+        "topicid":0,
+        "questiontitle":"问题一",
+        "err": false,
+        "ismust": true,
+        "rela": {
+            "question_id": null,
+            "option_index": []
+        },
+        "options": [{
+            "scontent": "问题一的选项一",
+            "goquestion": []
+        },{
+            "scontent": "问题一的选项二",
+            "goquestion": []
+        },{
+            "scontent": "问题一的选项三",
+            "goquestion": []
+        }]
+    }, {
+        "show": false,
+        "questionid":1,
+        "topicid":1,
+        "questiontitle":"问题二",
+        "err":false,
+        "ismust":false,
+        "rela": {
+            "question_id":0, 
+            "option_index": [2]
+        },
+        "min":1, 
+        "max": 2,
+        "options": [{
+            "scontent":"问题二的选项一"
+        },{
+            "scontent":"问题二的选项二"
+        },{
+            "scontent":"问题二的选项三"
+        }]
+    }, {
+        "show": false,
+        "questionid":2,
+        "topicid":2,
+        "questiontitle":"问题三",
+        "err": false,
+        "ismust":true,
+        "rela": {
+            "question_id":0, 
+            "option_index": [1]
+        },
+        "scontent": ""
+    }]
+}
