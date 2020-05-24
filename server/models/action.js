@@ -19,11 +19,15 @@ _model.findById = async function (sequelize, id) {
     }
   });
 };
+
+
+
+
 _model.create = async function (sequelize, model) {
   return await sequelize.create(model);
 };
 
-// UPDATE bannars_bannar SET rank=2 WHERE id IN ('0','1')
+
 _model.update = async function (sequelize, setStatement, condition) {
   return await sequelize.update(setStatement, condition);
 }

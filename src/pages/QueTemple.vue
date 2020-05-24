@@ -13,10 +13,10 @@
                     <span style="color:red;">{{question.must==true?"*":""}}</span> 
                     {{i_q+1}} . 
                     {{question.questiontitle}}
-                    <span style="color:gray;">[{{question.type==0?"单选题":(question.type==1?"多选题":"填空题")}}]</span>
+                    <span style="color:gray;">[{{question.topicid==0?"单选题":(question.topicid==1?"多选题":"填空题")}}]</span>
                 </p>
                 <!-- 单选 -->
-                <div v-if="question.type==0">
+                <div v-if="question.topicid==0">
                     <p style="color:red">{{singleWaring(question)}}</p>
                     <el-radio-group v-model="question.ans" @change="rela(i_q)">
                         <div v-for="(option,i_o) in question.options"
@@ -28,7 +28,7 @@
                     </el-radio-group>
                 </div>
                 <!-- 多选 -->
-                <div v-if="question.type==1">
+                <div v-if="question.topicid==1">
                     <p style="color:red" >{{multWaring(question)}}</p>
                     <el-checkbox-group v-model="question.ans">
                         <div v-for="(option,i_o) in question.options"
@@ -40,7 +40,7 @@
                     </el-checkbox-group>
                 </div>
                 <!-- 填空 -->
-                <div v-if="question.type==2">
+                <div v-if="question.topicid==2">
                     <p style="color:red" >{{blankWarning(question)}}</p>
                     <el-form-item prop="content">
                         <el-input 

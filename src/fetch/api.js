@@ -14,7 +14,7 @@ axios.defaults.baseURL = '/api/v1';
 axios.interceptors.request.use((config) => {
     if(config.method  === 'post'){
 
-        let token=localStorage.getItem('token');
+        let token=localStorage.getItem("token");
         if(token){
           config.data=config.data||{};
           config.data.token=token;
@@ -129,5 +129,12 @@ export default {
     DeleteQuestionnaire(params)
     {
       return fetch('/delete-questionnaire',params);
+    },
+    /**
+     * 交叉分析
+     */
+    CrossAnalysis(params)
+    {
+      return fetch('/cross-analysis',params);
     }
 }
