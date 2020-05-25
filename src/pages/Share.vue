@@ -19,8 +19,9 @@
 
 
 <script type="text/ecmascript-6">
-  // import QRCode from 'qrcodejs2'
+  import QRCode from 'qrcodejs2'
   import * as qrcode from "jsonwebtoken";
+  import api from "../fetch/api";
 
   export default {
         name: "share",
@@ -28,18 +29,22 @@
         data(){
             return{
               dialogVisible:false,
-              //获取从“发布问卷”按钮那里传过来的id值
-              userId:this.$route.params.userId,
-              //userId:102,
-              //需要跳转的页面为“answer.vue”
+              //获取前页面穿过来的问卷id值，用于生成二维码
+              paperId:this.$route.params.paperid,
+
+              //需要跳转的页面为“answer.vue”              *********这里填写上线后的地址
               url:"/answer"
             }
         },
-        methods:{
+
+    //获取页面传输过来的（问卷id）
+    created() {},
+
+    methods:{
             qrCode(){
               //var codeText = window.location.href;
               //url和id之间用“？”分隔开
-              var codeText = String(this.url+"?"+this.userId);
+              var codeText = String(this.url+"?"+this.paperId);
               console.log(codeText);
               this.dialogVisible = true;
               this.$nextTick(function () {
@@ -61,8 +66,17 @@
             a.href=temp[0].toDataURL();
             a.download="drcQrcode";
             a.click();
-          }
+          },
 
+          //识别二维码
+          /*identifyFunc:function(){
+            var can = $('canvas')[0];
+            var can_con = can.getContent('2d');
+          }*/
         }
     }
 </script>
+
+<style scoped>
+
+</style>
