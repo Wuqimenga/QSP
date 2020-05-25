@@ -23,19 +23,19 @@ new Vue({
 })
 
 //在路由之前，查看是否需要登录认证
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(r => r.meta.requireAuth)) {
-      if (localStorage.getItem("token")) {
-          next();
-      }
-      else {
-          next({
-              path: '/login',
-              query: {redirect: to.fullPath}
-          })
-      }
-  }
-  else {
-      next();
-  } 
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(r => r.meta.requireAuth)) {
+//       if (localStorage.getItem("token")) {
+//           next();
+//       }
+//       else {
+//           next({
+//               path: '/login',
+//               query: {redirect: to.fullPath}
+//           })
+//       }
+//   }
+//   else {
+//       next();
+//   } 
+// })

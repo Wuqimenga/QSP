@@ -275,7 +275,7 @@ export default {
     createQuestionnaire: function() {
       this.$router.push({
         name: "Model",
-        query: { userId: this.querylist.userId }
+        query: { userid: this.querylist.userid }
       });
     },
     allQuestionnaire: function() {

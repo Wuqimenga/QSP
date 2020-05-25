@@ -1,7 +1,7 @@
 <!-- 预览和回答页面共用模板 -->
 <template>
 <div class="center-plane">
-    <!-- {{formData}}  -->
+    {{formData}} 
     <el-form :rules="rules" v-model="formData">
     <div>
         <h1>{{formData.papertitle}}</h1>
@@ -10,13 +10,13 @@
           :key="i_q">
             <div v-if="question.show">
                 <p>
-                    <span style="color:red;">{{question.ismust==true?"*":""}}</span> 
+                    <span style="color:red;">{{question.ismust==1?"*":""}}</span> 
                     {{i_q+1}} . 
                     {{question.questiontitle}}
-                    <span style="color:gray;">[{{question.topicid==0?"单选题":(question.topicid==1?"多选题":"填空题")}}]</span>
+                    <span style="color:gray;">[{{question.type==0?"单选题":(question.type==1?"多选题":"填空题")}}]</span>
                 </p>
                 <!-- 单选 -->
-                <div v-if="question.topicid==0">
+                <div v-if="question.type==0">
                     <p style="color:red">{{singleWaring(question)}}</p>
                     <el-radio-group v-model="question.ans" @change="rela(i_q)">
                         <div v-for="(option,i_o) in question.options"
@@ -28,7 +28,7 @@
                     </el-radio-group>
                 </div>
                 <!-- 多选 -->
-                <div v-if="question.topicid==1">
+                <div v-if="question.type==1">
                     <p style="color:red" >{{multWaring(question)}}</p>
                     <el-checkbox-group v-model="question.ans">
                         <div v-for="(option,i_o) in question.options"
@@ -40,7 +40,7 @@
                     </el-checkbox-group>
                 </div>
                 <!-- 填空 -->
-                <div v-if="question.topicid==2">
+                <div v-if="question.type==2">
                     <p style="color:red" >{{blankWarning(question)}}</p>
                     <el-form-item prop="content">
                         <el-input 
@@ -91,7 +91,7 @@ export default {
         singleWaring:function(questionq){
             return function(question){
                 
-                if(question.show&&question.ismust&&question.ans==null)
+                if(question.show&&question.ismust==1&&question.ans==null)
                 {
                     question.err=true;
                     return "本题必答";
@@ -104,7 +104,7 @@ export default {
         // 多选题所选选项数目限制提示
         multWaring:function(question){
             return function(question){
-                if(question.show&&question.ismust||question.ans.length>0)// 如果多选要求你必填，或已经选择了选项
+                if(question.show&&question.ismust==1||question.ans.length>0)// 如果多选要求你必填，或已经选择了选项
                 {
                     if(question.ans.length<question.min||question.max&&question.ans.length>question.max)
                     {
@@ -125,7 +125,7 @@ export default {
         // 填空题必填提示
         blankWarning:function(question){
             return function(question){
-                if(question.show&&question.ismust&&question.scontent=="")
+                if(question.show&&question.ismust==1&&question.scontent=="")
                 {
                     question.err=true;
                     return "此题必答";

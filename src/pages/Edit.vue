@@ -2,8 +2,8 @@
 <div>
     <vheader content="编辑" :backRouter="this.$router"/>
     <div class="center-plane">
-    <!-- <h3>formData:</h3>
-    <h4>{{formData}}</h4> -->
+    <h3>formData:</h3>
+    <h4>{{formData}}</h4>
     <el-form ref="rulesForm1" :rules="rules" :model="formData">
         <div class="edit-head-menu">
         <el-row :gutter="10">
@@ -22,7 +22,7 @@
             :before-close="editDialogClose"
             title="提示"
             :visible.sync="editVisible"
-            width="30%">
+            width="70%">
             <!-- <el-form-item prop="templeTitle"> -->
                 <el-input 
                 show-word-limit
@@ -73,17 +73,17 @@
             <!-- 题目面板 -->
             <el-card shadow="hover">
                 <p>
-                    <span style="color:red;">{{question.ismust==true?"*":""}}</span> 
+                    <span style="color:red;">{{question.ismust==1?"*":""}}</span> 
                     {{i_q+1}} . 
                     {{question.questiontitle}}
-                    <span style="color:gray;">[{{question.topicid==0?"单选题":(question.topicid==1?"多选题":"填空题")}}]</span>
+                    <span style="color:gray;">[{{question.type==0?"单选题":(question.type==1?"多选题":"填空题")}}]</span>
                 </p>
                 <div v-for='(option,i_o) in question.options' :key="i_o">
                     <el-radio :label="option.scontent"></el-radio>
                 </div>
 
                 <!-- 这只是个没有用的输入框，用来演示的 -->
-                <div v-if="question.topicid==2">
+                <div v-if="question.type==2">
                     <el-form-item>
                         <el-input  :disabled="true" placeholder="填空内容" />
                     </el-form-item>
@@ -111,7 +111,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col  :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
-                        <el-switch active-text="必答" v-model="question.ismust"></el-switch>
+                        <el-switch active-value=1 inactive-value=0 active-text="必答" v-model="question.ismust"></el-switch>
                         </el-col>
                     </el-row>
                         <div v-for='(option,i_o) in question.options' :key="i_o">
@@ -136,8 +136,8 @@
 
                                     <el-button 
                                     @click="del_option(i_q,i_o)" 
-                                    :disabled="((question.topicid==0&&question.options.length<2)
-                                    ||(question.topicid==1&&question.options.length<=2))?true:false"
+                                    :disabled="((question.type==0&&question.options.length<2)
+                                    ||(question.type==1&&question.options.length<=2))?true:false"
                                     type="primary"
                                     size="small"
                                     icon="el-icon-minus" 
@@ -165,7 +165,7 @@
                         
                     
                     <!-- 多选题显示编辑限制选项个数组件 -->
-                        <div v-if="question.topicid==1">
+                        <div v-if="question.type==1">
                             <el-row>
                                 <el-col :xs="7" :sm="4" :md="4" :lg="4" :xl="4">
                                     <div class="small-title">
@@ -217,7 +217,7 @@
                                 <div class="small-title">关联题目:</div>
                             </el-col>
                             <el-col :xs="21" :sm="21" :md="21" :lg="21" :xl="21">
-                                <el-select v-model="question.rela.question_id" placeholder="请选择">
+                                <el-select v-model="question.rela.queid" placeholder="请选择">
                                     <el-option
                                         v-for="(rq,ri) in getRelatedQuestions(i_q)"
                                         :key="ri"
@@ -232,10 +232,10 @@
                         <el-row>
                             <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :push="3">
                             <el-checkbox-group 
-                                v-model="question.rela.option_index"
-                                v-for="(ro,ri) in getOptions(question.rela.question_id)"
+                                v-model="question.rela.optionindex"
+                                v-for="(ro,ri) in getOptions(question.rela.queid)"
                                 :key="ri">
-                                <!-- v-for 所选题目的所有选项 (ro,ri) in getOptions(question.rela.question_id) -->
+                                <!-- v-for 所选题目的所有选项 (ro,ri) in getOptions(question.rela.queid) -->
                                 <el-checkbox :label="ri">{{ro.scontent}}</el-checkbox>
                             </el-checkbox-group>
                             </el-col>
@@ -259,7 +259,7 @@
 
 <script>
 import api from "../fetch/api"
-import _test_fix from "./json/test-fix.json";// 引入测试问卷修改
+// import _test_fix from "./json/test-fix.json";// 引入测试问卷修改
 import _exam_model from "./json/exam-model.json";// 引入考试模板
 import _sigin_model from "./json/signin-model.json";//引入签到模板
 import _vote_model from "./json/vote-model.json";//引入投票模板
@@ -271,15 +271,15 @@ export default {
    name:'Edit',
     data(){
         return{
-            modelType:this.$route.query.modelType,
+            modeltype:this.$route.query.modeltype,
             onLine:true,// 是否联网
             editVisible:false,// 是否显示标题编辑浮窗
             dialogVisible:false,  // 编辑面板不显示
             templeTitle:"",//临时标题，还没有被保存的标题
             formData:{
                 paperid:"",// 问卷id，等到保存问卷时，才在后端进行设置
-                ispublish:false,// 是否发布
-                userid:this.$route.query.userId,// 用户id,获取从Model传来的用户id
+                ispublish:0,// 是否发布
+                userid:this.$route.query.userid,// 用户id,获取从Model传来的用户id
                 createtime:(new Date()).toLocaleDateString(),// 问卷创建时间
                 papertitle:"问卷标题",
                 questions:[]
@@ -292,42 +292,40 @@ export default {
     },
     // 从localStorage 提取刷新前的数据
     created(){
-        this.formData.userid=this.$route.query.userId;
-        console.log("created : "+this.templeTitle);
+        this.formData.userid=this.$route.query.userid;
         if(localStorage.getItem(this.formData.userid+"Edit"))// 如果localStorage存有问卷表单数据
         {
             // 获取保存在localStorage的表单数据
-            console.log(this.formData.userid+"Edit");
             this.formData=JSON.parse(localStorage.getItem(this.formData.userid+"Edit"));
         }
         else// 如果没有保存说明是第一次进入，渲染问卷模板
         {
-            var modelType = this.$route.query.modelType;
-            if(modelType==0)
+            var modeltype = this.$route.query.modeltype;
+            if(modeltype==0)
             {
                 this.formData={
                     paperid:"",// 问卷id，等到保存问卷时，才在后端进行设置
-                    ispublish:false,// 是否发布
-                    userid:this.$route.query.userId,// 用户id,获取从Model传来的用户id
+                    ispublish:0,// 是否发布
+                    userid:this.$route.query.userid,// 用户id,获取从Model传来的用户id
                     createtime:(new Date()).toLocaleDateString(),// 问卷创建时间
                     papertitle:"问卷标题",
                     questions:[]
                 }
                 this.editVisible=true;
             }
-            else if(modelType==1)
+            else if(modeltype==1)
             {
                 this.formData=_investigation_model;
             }
-            else if(modelType==2)
+            else if(modeltype==2)
             {
                 this.formData=_exam_model;
             }
-            else if(modelType==3)
+            else if(modeltype==3)
             {
                 this.formData=_vote_model;
             }
-            else if(modelType==4)
+            else if(modeltype==4)
             {
                 this.formData=_sigin_model;
             }
@@ -359,7 +357,6 @@ export default {
     },
     mounted(){
         this.templeTitle = this.formData.papertitle;
-        console.log("mounted: "+this.templeTitle);
     },
     // // 网络状态判断
     // mounted(){
@@ -383,30 +380,29 @@ export default {
 
     // 数据发生变化时保存数据到localstorage，防止刷新之后数据消失
     updated(){
-        this.formData.userid=this.$route.query.userId;
-        console.log("updated : "+this.formData.userid+"Edit");
+        this.formData.userid=this.$route.query.userid;
         window.localStorage.setItem(this.formData.userid+"Edit",JSON.stringify(this.formData));
     },
     methods:{
-        // 提交数据前对数据进行处理，增加ip、to、ans属性，返回处理好的对象array，不改变原有的 this.formData
+        // 提交数据前对数据进行处理，增加ip、goquestion、ans属性，返回处理好的对象array，不改变原有的 this.formData
         handleData(formData)
         {
             var array = formData;// 返回的结果,to是跳转问题的index
             array.ip="";// 添加问卷记录Ip的属性
             for(var i=0;i<array.questions.length;i++)// 遍历formData
             {
-                if(array.questions[i].rela.option_index.length>0)// 找到被关联题目下标i
+                if(array.questions[i].rela.optionindex.length>0)// 找到被关联题目下标i
                 {
                     array.questions[i].show=false;// 隐藏被关联问题
                     for(var j=0;j<i;j++)// 在被关联题目前面寻找关联题目
                     {
-                        if(array.questions[j].questionid==array.questions[i].rela.question_id)// 找到关联题目的下标j
+                        if(array.questions[j].questionid==array.questions[i].rela.queid)// 找到关联题目的下标j
                         {
-                            for(var k=0;k<array.questions[i].rela.option_index.length;k++)// 被关联题目option_index的下标k
+                            for(var k=0;k<array.questions[i].rela.optionindex.length;k++)// 被关联题目option_index的下标k
                             {
-                                array.questions[j].options[array.questions[i].rela.option_index[k]].goquestion.push(i);
-                                // var t= array.questions[j].options[array.questions[i].rela.option_index[k]].goquestion;
-                                // array.questions[j].options[array.questions[i].rela.option_index[k]].goquestion = new Set(t);// 去除重复项
+                                array.questions[j].options[array.questions[i].rela.optionindex[k]].goquestion.push(i);
+                                // var t= array.questions[j].options[array.questions[i].rela.optionindex[k]].goquestion;
+                                // array.questions[j].options[array.questions[i].rela.optionindex[k]].goquestion = new Set(t);// 去除重复项
                             }
                             break;// 找到之后可以直接处理下一题
                         }
@@ -415,14 +411,14 @@ export default {
                 else{
                     array.questions[i].show=true;
                 }
-                if(array.questions[i].topicid<2)
+                if(array.questions[i].type<2)
                 {
                     // 在formatData里添加ans，记录选择题的答案（所选选项的下标）
-                    if(array.questions[i].topicid==0)// 如果是单选题
+                    if(array.questions[i].type==0)// 如果是单选题
                     {
                         array.questions[i].questionid=i+1;
                     }
-                    else if(array.questions[i].topicid==1)//如果是多选题
+                    else if(array.questions[i].type==1)//如果是多选题
                     {
                         array.questions[i].ans=[];
                     }
@@ -540,7 +536,7 @@ export default {
             var array = this.formData.questions;
             for(var i=0;i<index;i++)
             {
-                if(array[i].topicid==0)// 如果是单选题
+                if(array[i].type==0)// 如果是单选题
                 {
                     idList.push(array[i]);
                     idList=Array.from(new Set(idList));
@@ -552,32 +548,32 @@ export default {
         save_logic(question)
         {
             // 如果只设置题目没有设置选项，不保存设置
-            if(question.rela.option_index.length==0)
+            if(question.rela.optionindex.length==0)
             {
-                question.rela.question_id=null;
+                question.rela.queid=null;
             }
             this.dialogVisible=false;
         },
         // 清除题目关联
         delete_logic(question){
-            question.rela.question_id=null;
-            question.rela.option_index=[];
+            question.rela.queid=null;
+            question.rela.optionindex=[];
             this.dialogVisible=false;
         },
         // 增加题目
-        add_question(topicid){
+        add_question(type){
             var question={};
             question.show=false;
             question.questionid=++questionId;
-            question.topicid=topicid;
+            question.type=type;
             question.questiontitle='题目';
             question.err=false;
-            question.ismust=false;
+            question.ismust=0;
             question.rela={
-                question_id:null,
-                option_index:[]
+                queid:null,
+                optionindex:[]
             }
-            if(topicid==0){// 单选题
+            if(type==0){// 单选题
                 question.options=[
                     {
                         scontent:'选项',
@@ -585,20 +581,23 @@ export default {
                     }
                 ];
             }
-            else if(topicid==1){// 多选题
+            else if(type==1){// 多选题
                 question.min=2;
                 question.max=null;
                 question.options=[
                     {
                         scontent:'选项',
+                        goquestion:[],
                     },
                     {
                         scontent:'选项',
+                        goquestion:[],
                     }
                 ];
             }else// 填空题
             {
-                question.scontent=''
+                question.scontent='';
+                question.goquestion=[];
             }
             this.formData.questions.push(question);
         },
@@ -610,7 +609,7 @@ export default {
             // 遍历后面的题目，看是否有被关联
             for(var i=i_q;i<array.length;i++)
             {
-                if(array[i].rela.question_id==questionid)
+                if(array[i].rela.queid==questionid)
                 {
                     this.$message({
                         message:"题目关联"+i+"题，不能删除！",
@@ -626,7 +625,7 @@ export default {
         question_moveUp(i_q){
             if(i_q>0)// 不是第一道题，可以上移
             {
-                if(this.formData.questions[i_q].rela.question_id==this.formData.questions[i_q-1].questionid)
+                if(this.formData.questions[i_q].rela.queid==this.formData.questions[i_q-1].questionid)
                 {
                     this.$message({
                         message:"被上一题关联，不能移动！",
@@ -645,7 +644,7 @@ export default {
         question_moveDown(i_q){
             if(i_q<this.formData.questions.length-1)// 不是最后一道题，可以下移
             {
-                if(this.formData.questions[i_q+1].rela.question_id==this.formData.questions[i_q].questionid)
+                if(this.formData.questions[i_q+1].rela.queid==this.formData.questions[i_q].questionid)
                 {
                     this.$message({
                         message:"关联下一题，不能移动！",
@@ -662,7 +661,7 @@ export default {
         // 题目移动到最前
         question_moveFirst(i_q){
             // 如果被关联，不能移动到最前
-            if(this.formData.questions[i_q].rela.question_id!=null)
+            if(this.formData.questions[i_q].rela.queid!=null)
             {
                 this.$message({
                     message:"被前面题目关联，不能移动到最前！",
@@ -679,7 +678,7 @@ export default {
         question_moveLast(i_q){
             for(var i=i_q;i<this.formData.questions.length;i++)
             {
-                if(this.formData.questions[i].rela.question_id==this.formData.questions[i_q].questionid)
+                if(this.formData.questions[i].rela.queid==this.formData.questions[i_q].questionid)
                 {
                     this.$message({
                         message:"关联后面的题目，不能移动到最后！",
@@ -696,7 +695,7 @@ export default {
         add_option(i_q,i_o){
             var option={};
             option.scontent='选项';
-            if(this.formData.questions[i_q].topicid==0)
+            if(this.formData.questions[i_q].type==0)
             {
                 option.goquestion=[];
             }

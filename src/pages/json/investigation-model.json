@@ -6,22 +6,23 @@
 	"questions": [{
 		"show": true,
 		"questionid": 5,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "你的专业是",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"goquestion": []
 	}, {
 		"show": true,
 		"questionid": 2,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "您的性别",
 		"err": false,
-		"ismust": false,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -38,10 +39,10 @@
 	}, {
 		"show": true,
 		"questionid": 3,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "以下哪项描述符合你毕业后的去向安排？",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -70,10 +71,10 @@
 	}, {
 		"show": false,
 		"questionid": 4,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "毕业后选择工作的城市",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
@@ -94,10 +95,10 @@
 	}, {
 		"show": false,
 		"questionid": 5,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "你以后是否想找专业对口的工作？",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
@@ -114,10 +115,10 @@
 	}, {
 		"show": false,
 		"questionid": 6,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "你最想通过什么方式就业？",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
@@ -138,10 +139,10 @@
 	}, {
 		"show": false,
 		"questionid": 7,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "是否在意公司男女比例？",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
@@ -158,10 +159,10 @@
 	}, {
 		"show": false,
 		"questionid": 8,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "你认为实习期间多少薪水合理？",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
@@ -186,10 +187,10 @@
 	}, {
 		"show": false,
 		"questionid": 14,
-		"topicid": 1,
+		"type": 1,
 		"questiontitle": "以下福利中，你希望公司拥有哪些福利？",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
@@ -198,30 +199,35 @@
 		"max": 4,
 		"options": [{
 			"scontent": "五险一金",
-			"selectid": 0
+			"selectid": 0,
+			"goquestion": []
 		}, {
 			"scontent": "出国进修",
-			"selectid": 1
+			"selectid": 1,
+			"goquestion": []
 		}, {
 			"scontent": "带薪休假",
-			"selectid": 2
+			"selectid": 2,
+			"goquestion": []
 		}, {
 			"scontent": "节日福利",
-			"selectid": 3
+			"selectid": 3,
+			"goquestion": []
 		}],
 		"ans": []
 	}, {
 		"show": false,
 		"questionid": 15,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "在实习阶段你最想得到什么？（能力或类或物质类请详细概括）",
 		"err": false,
-		"ismust": false,
+		"ismust": 0,
 		"rela": {
 			"question_id": 7,
 			"option_index": [0]
 		},
-		"scontent": ""
+		"scontent": "",
+		"goquestion": []
 	}],
 	"papertitle": "大学生就业意向调查表",
 	"ip": ""

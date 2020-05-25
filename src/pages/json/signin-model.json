@@ -6,39 +6,42 @@
 	"questions": [{
 		"show": true,
 		"questionid": 1,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "姓名：",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"goquestion": []
 	}, {
 		"show": true,
 		"questionid": 2,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "部门",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"goquestion": []
 	}, {
 		"show": true,
 		"questionid": 3,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "员工编号",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"goquestion": []
 	}],
 	"papertitle": "会议签到",
 	"ip": ""

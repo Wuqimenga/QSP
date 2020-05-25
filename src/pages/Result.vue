@@ -37,7 +37,7 @@
 <script>
      //Result.vue//参考设计稿的统计页面，提交问卷id，返回问卷的总体填写信息，问卷id参考share
     import api from "../fetch/api";
-    import answerData from "../../static/answerData"
+    // import answerData from "../../static/answerData"
 
     export default {
         name: "Result",

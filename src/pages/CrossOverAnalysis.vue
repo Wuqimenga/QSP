@@ -174,7 +174,7 @@ export default {
       for(var i=0,j=0;i<result.length;i++)
       {
         // 选择题
-        if(result[i].topicid<2)
+        if(result[i].type<2)
         {
           selectQues[j].questionid=result[i].questionid;
           selectQues[j].questiontitle=result[i].questiontitle;

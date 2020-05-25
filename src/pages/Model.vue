@@ -51,7 +51,7 @@ export default {
         return{
             querylist:{
                 userId:this.$route.query.userId,
-                modelType:0
+                modeltype:0
             }
         }
     },
@@ -59,7 +59,7 @@ export default {
         chooseType(type)
         {
             window.localStorage.clear();
-            this.querylist.modelType = type;
+            this.querylist.modeltype = type;
             this.$router.push({
                 name: "Edit",
                 query: this.querylist 

@@ -7,10 +7,10 @@
     "questions": [{
         "show": false,
         "questionid":0,
-        "topicid":0,
+        "type":0,
         "questiontitle":"问题一",
         "err": false,
-        "ismust": true,
+        "ismust": 1,
         "rela": {
             "question_id": null,
             "option_index": []
@@ -28,10 +28,10 @@
     }, {
         "show": false,
         "questionid":1,
-        "topicid":1,
+        "type":1,
         "questiontitle":"问题二",
         "err":false,
-        "ismust":false,
+        "ismust":0,
         "rela": {
             "question_id":0, 
             "option_index": [2]
@@ -39,23 +39,27 @@
         "min":1, 
         "max": 2,
         "options": [{
-            "scontent":"问题二的选项一"
+            "scontent":"问题二的选项一",
+            "goquestion": []
         },{
-            "scontent":"问题二的选项二"
+            "scontent":"问题二的选项二",
+            "goquestion": []
         },{
-            "scontent":"问题二的选项三"
+            "scontent":"问题二的选项三",
+            "goquestion": []
         }]
     }, {
         "show": false,
         "questionid":2,
-        "topicid":2,
+        "type":2,
         "questiontitle":"问题三",
         "err": false,
-        "ismust":true,
+        "ismust":0,
         "rela": {
             "question_id":0, 
             "option_index": [1]
         },
-        "scontent": ""
+        "scontent": "",
+		"goquestion": []
     }]
 }

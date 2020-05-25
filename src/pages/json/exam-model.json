@@ -6,10 +6,10 @@
 	"questions": [{
 		"show": false,
 		"questionid": 1,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "您的姓名：",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -18,10 +18,10 @@
 	}, {
 		"show": false,
 		"questionid": 2,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "您的工号",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -30,10 +30,10 @@
 	}, {
 		"show": false,
 		"questionid": 3,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "银行汇票的提示付款期限自出票日起()，遇节假日顺延。",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -51,10 +51,10 @@
 	}, {
 		"show": false,
 		"questionid": 4,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "账户启用时，我行系统将自动向客户法定代表人发送通知。",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -69,10 +69,10 @@
 	}, {
 		"show": false,
 		"questionid": 5,
-		"topicid": 1,
+		"type": 1,
 		"questiontitle": "客户预约后查询账户状态，包括()等",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -80,26 +80,31 @@
 		"min": 1,
 		"max": 4,
 		"options": [{
-			"scontent": "预约成功"
-		}, {
-			"scontent": "账户待核准"
-		}, {
-			"scontent": "账户待启用"
-		}, {
-			"scontent": "账户已启用"
+			"scontent": "预约成功",
+			"goquestion": []
+			}, {
+			"scontent": "账户待核准",
+			"goquestion": []
+			}, {
+			"scontent": "账户待启用",
+			"goquestion": []
+			}, {
+			"scontent": "账户已启用",
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
 		"questionid": 6,
-		"topicid": 2,
+		"type": 2,
 		"questiontitle": "我行的服务精神是：",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"goquestion": []
 	}],
 	"papertitle": "公司业务知识考试",
 	"ip": ""

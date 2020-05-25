@@ -77,14 +77,14 @@ export default new Router({
         requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
     }
     },
-    // {
-    //   path: '/analysis',
-    //   name: 'Analysis',
-    //   component: Analysis,
-    //   meta: {
-    //     requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
-    // }
-    // },
+    {
+      path: '/model',
+      name: 'Model',
+      component: Model,
+      meta: {
+        requireAuth: true,//以这个字段来说明这个路由是否需要登录认证才能访问
+    }
+    },
     {
       path: '/done',
       name: 'Done',
