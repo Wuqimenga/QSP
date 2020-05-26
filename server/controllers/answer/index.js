@@ -1,10 +1,10 @@
 //分词部分使用盘古分词
 //https://github.com/leizongmin/node-segment/tree/greenkeeper/initial
 const _model=require('../../models/action');
-const findansSequelize=require('../../models/index').answer;//answer
-const findopSequelize=require('../../models/index').options;//option
-const asSequelize=require('../../models/index').answer_sheet;//answer-sheet
-const findqueSequelize=require('../../models').question;//question
+const answer=require('../../models/index').answer;//answer
+const options=require('../../models/index').options;//option
+const answersheet=require('../../models/index').answersheet;//answer-sheet
+const question=require('../../models').question;//question
 var Segment = require('segment');// 载入模块,npm install segment
 
 module.exports = {
@@ -202,13 +202,12 @@ module.exports = {
         paperid: req.body.paperid
       }
     };
-    var data = await _model.findAll(asSequelize, condition);
-    var result=[];
     try{
+      var data = await _model.findAll(answersheet, condition);
+      var result=[];
       for(let i=0;i<data.length;i++) {
         result.push(data[i]);
       }
-      console.log(result);
       body.result=result;
     }
     catch (e) {
@@ -228,8 +227,8 @@ module.exports = {
       }
     };
     try{
-      await _model.deleteAll(findansSequelize, condition);//删的是answer,和git上那个重复的话删除这行
-      await _model.deleteAll(asSequelize, condition);//删的是answer-sheet
+      await _model.deleteAll(answer, condition);//删的是answer,和git上那个重复的话删除这行
+      await _model.deleteAll(answersheet, condition);//删的是answer-sheet
     }
     catch (e) {
       body.code='02';
@@ -246,49 +245,49 @@ module.exports = {
     var ids=req.body.paperid;
     //查问题表得前三attributes
     var questioncondition = {
-      attributes:['questionid','questiontitle','topicid'],
+      attributes:['questionid','questiontitle','type'],
       where: {
-        paperid: req.body.paperid
+        paperid: ids
       }
     };
 
     try{
       var result=[];
-      var data = await _model.findAll(findqueSequelize, questioncondition);
-
+      var data = await _model.findAll(question, questioncondition);
+      //data查询问卷的问题，必答，题目类型
       for (let i=0;i<data.length;i++)
       {
         //构建body，初始写入
-        var innerbody={questionid:'',questiontitle:'',topicid:'',answernumber:'',answer:'',options:''};
+        var innerbody={questionid:'',questiontitle:'',type:'',answernumber:'',answers:'',options:'',tableStatus:"true",wordStatus:"false",pieStatus:"false",barStatus:"false"};
         innerbody.questionid=data[i].questionid;
         innerbody.questiontitle=data[i].questiontitle;
-        innerbody.topicid=data[i].topicid;
+        innerbody.type=data[i].type;
 
-        //用data中的questionid对应出作答人数
+        //用data中的questionid对应出单题作答人数
         var anscondition={
           attributes:['ip'],
           where:{
-            paperid:ids[i].paperid,
+            paperid:ids,
             questionid:data[i].questionid
           }
         };
-        var ansnum = await _model.findAndCountAll(findansSequelize,anscondition);
+        var ansnum = await _model.findAndCountAll(answer,anscondition);
         innerbody.answernumber=ansnum.count;
 
         //是填空就answer不是就options
         //把{问题id、标题、种类、回答人数}当作整体后的操作，即单独考虑ans[]和op[]
-        if(data[i].topicid==2)
+        if(data[i].type==2)
         {
           innerbody.options="";//options写入空
           var ans=[];
           var anscondition1={
             attributes:['answer'],
             where:{
-              paperid:ids[i].paperid,
+              paperid:ids,
               questionid:data[i].questionid
             }
           };
-          var allanswer=await _model.findAll(findansSequelize, anscondition1);
+          var allanswer=await _model.findAll(answer,anscondition1);
           var str="";
           for(let a=0;a<allanswer.length;a++){
             str=str+allanswer[a].answer;
@@ -315,18 +314,18 @@ module.exports = {
             an.value=map[word];
             ans.push(an);
           }
-          innerbody.answer=ans;
+          innerbody.answers=ans;
         }
         else {
           innerbody.answer="";//answer写入空
           var selectcondition = {
             attributes: ['selectid', 'scontent'],
             where: {
-              paperid:ids[i].paperid,
+              paperid:ids,
               questionid:data[i].questionid
             }
           };
-          var dataoption = await _model.findAll(findopSequelize, selectcondition);
+          var dataoption = await _model.findAll(options, selectcondition);
 
           //{问题id、标题、种类、回答人数}下的选项作答人数
           var innerresult=[];
@@ -335,12 +334,12 @@ module.exports = {
             var contentcondition = {
               attributes: ['ip'],
               where: {
-                paperid:ids[i].paperid,
+                paperid:ids,
                 questionid: data[i].questionid,
                 selectid: dataoption[j].selectid
               }
             };
-            var selectnum = await _model.findAndCountAll(findansSequelize, contentcondition);
+            var selectnum = await _model.findAndCountAll(answer, contentcondition);
             innerjbody.selectid=dataoption[j].selectid;
             innerjbody.scontent=dataoption[j].scontent;
             innerjbody.selectnumber=selectnum.count;

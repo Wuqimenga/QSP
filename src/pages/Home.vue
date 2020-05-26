@@ -273,10 +273,11 @@ export default {
       });
     },
     createQuestionnaire: function() {
-      this.$router.push({
+/*       this.$router.push({
         name: "Model",
         query: { userId: this.querylist.userId }
-      });
+      }); */
+      this.$router.push({name:'Edit',query:{userId:this.querylist.userid}});
     },
     allQuestionnaire: function() {
       this.querylist.explore=false;
@@ -314,7 +315,11 @@ export default {
         .DeleteQuestionnaire({paperid:paperid})
         .then(res => {
           if (res.code === "01") {
-            this.$router.go(0);
+            this.list.forEach((qs,index)=>{
+                if(qs.paperid===paperid){
+                  this.list.splice(index,1);
+                }
+            })
             this.$message({ type: "info", message: "删除成功" });
           } else if (res.code === "03") {
             this.$router.push({ path: "/login", query: { no_token: 1 } });
@@ -336,8 +341,8 @@ export default {
 
     resultAction: function(paperid) {
       this.$router.push({
-        name: "Result",
-        params: { userid: this.querylist.userid, paperid: paperid }
+        path: "/result",
+        query: { userid: this.querylist.userid, paperid: paperid }
       });
     },
     changeStatus: function(paperid) {
@@ -345,7 +350,12 @@ export default {
         .ChangeReleaseStatus({paperid:paperid})
         .then(res => {
           if (res.code === "01") {
-            this.$router.go(0);
+            this.list.forEach(qs=>{
+              if(qs.paperid===paperid)
+              {
+                qs.ispublish=!qs.ispublish;
+              }
+            })
             this.$message({ type: "info", message: "修改成功" });
           } else if (res.code === "03") {
             this.$router.push({ path: "/login", query: { no_token: 1 } });

@@ -5,6 +5,7 @@ const config = require('../../config');
 const router = express.Router();
 var userController=require('../controllers/user')
 var questionnaireController=require('../controllers/questionnaire')
+var answerController=require('../controllers/answer')
 
 // 在每一个请求被处理之前都会执行的middleware
 router.use(function(req, res, next) {
@@ -32,4 +33,11 @@ router.post('/register', userController.register);
 router.post('/get-questionnaires',questionnaireController.getQuestionnaires);
 router.post('/delete-questionnaire',questionnaireController.deleteQuestionnaires);
 router.post('/change-release-status',questionnaireController.changeStatus);
+router.post('/post-new-questionnaire',questionnaireController.postNewQuestionnaire);
+router.post('/get-questionnaire-to-answer',questionnaireController.getQuestionnaireToAnswer);
+router.post('/post-answers',answerController.postAnswers);
+router.post('/get-analysis',answerController.getAnalysis);
+router.post('/get-statics',answerController.getStatics);
+router.post('/cross-analysis',answerController.crossOverAnalysis);
+router.post('/delete-answer',answerController.deleteAnswer);
 module.exports=router;

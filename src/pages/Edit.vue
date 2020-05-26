@@ -238,6 +238,7 @@ import _exam_model from "./json/exam-model.json";// 引入考试模板
 import _sigin_model from "./json/signin-model.json";//引入签到模板
 import _vote_model from "./json/vote-model.json";//引入投票模板
 import _investigation_model from "./json/investigation-model.json";//引入调查模板
+import format from "../js/format"
 
 var questionId=0;// 由前端页面分配每个问题的id
 
@@ -264,8 +265,8 @@ export default {
     },
     // 从localStorage 提取刷新前的数据
     created(){
-        this.formData.userid=this.$route.query.userId
-        console.log("localstorage:  "+this.$route.query.userId)
+        this.formData.userid=this.$route.query.userId;
+        this.formData.createtime=format(this.formData.createtime,'YYYY-MM-DD')
         if(localStorage.getItem(this.formData.userid+"Edit"))// 如果localStorage存有问卷表单数据
         {
             // 获取保存在localStorage的表单数据

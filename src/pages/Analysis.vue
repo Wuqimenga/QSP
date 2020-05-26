@@ -1,16 +1,16 @@
 <template>
   <div class="app">
     <div v-for="(item,index) in qsdata" :key="index">
-      <div class="option-card" v-if="item.topicid==='0'||item.topicid==='1'">
+      <div class="option-card" v-if="item.type===0 ||item.type===1">
         <div>
           <div>
             <h6>
               {{item.questionid}}.{{item.questiontitle}}
               <small
                 class="text-muted"
-                v-if="item.topicid==='0'"
+                v-if="item.type===0"
               >【单选题】</small>
-              <small class="text-muted" v-if="item.topicid==='1'">【多选题】</small>
+              <small class="text-muted" v-if="item.type===1">【多选题】</small>
             </h6>
           </div>
           <table class="table table-bordered table-hover" v-if="item.tableStatus">
@@ -23,21 +23,29 @@
             </thead>
             <tbody>
               <tr v-for="(option,key) in item.options" :key="key">
-                <th scope="row"><span class="table-span">{{option.scontent}}</span></th>
+                <th scope="row">
+                  <span class="table-span">{{option.scontent}}</span>
+                </th>
                 <td>{{option.selectnumber}}</td>
                 <td>
-                  <el-progress :percentage="option.selectnumber/item.answernumber*100"></el-progress>
+                  <el-progress :percentage="round(option.selectnumber/item.answernumber*100)"></el-progress>
                 </td>
               </tr>
               <tr>
-                <th scope="row"><span class="table-span">本题有效填写人数</span></th>
+                <th scope="row">
+                  <span class="table-span">本题有效填写人数</span>
+                </th>
                 <td>{{item.answernumber}}</td>
                 <td></td>
               </tr>
             </tbody>
           </table>
         </div>
-<div :id="item.questionid" v-show="item.wordStatus|item.barStatus|item.pieStatus" class="charts-item"></div>
+        <div
+          :id="item.questionid"
+          v-show="item.wordStatus|item.barStatus|item.pieStatus"
+          class="charts-item"
+        ></div>
         <ul class="header-ul-right">
           <li class="li-right">
             <el-button @click="transformTableStatus(item.questionid)">表格</el-button>
@@ -59,8 +67,8 @@
         </div>
         <div
           :id="item.questionid"
-           v-show="item.wordStatus|item.barStatus|item.pieStatus"
-           class="charts-item"
+          v-show="item.wordStatus|item.barStatus|item.pieStatus"
+          class="charts-item"
         ></div>
         <ul class="header-ul-right">
           <li class="li-right">
@@ -92,119 +100,18 @@ import "echarts/theme/macarons.js";
 export default {
   data() {
     return {
-      qsdata: [
-        {
-          questionid: "1",
-          questiontitle: "请问你是大几",
-          topicid: "0", //0为单选题,1为多选题,2为填空题
-          answernumber: "100",
-          answers: [],
-          sumtext: "本题合计有效人次",
-          tableStatus: true,
-          barStatus: false,
-          pieStatus: false,
-          options: [
-            {
-              selectid: "1",
-              scontent: "大一",
-              selectnumber: "30"
-            },
-            {
-              selectid: "2",
-              scontent: "大二",
-              selectnumber: "20"
-            },
-            {
-              selectid: "3",
-              scontent: "大二",
-              selectnumber: "30"
-            },
-            {
-              selectid: "4",
-              scontent: "大三",
-              selectnumber: "20"
-            }
-          ]
-        },
-        {
-          questionid: "2",
-          questiontitle: "请问你喜欢哪一种球类",
-          topicid: "1", //0为单选题,1为多选题,2为填空题
-          answernumber: "100",
-          sumtext: "本题合计有效人次",
-          answers: [],
-          tableStatus: true,
-          barStatus: false,
-          pieStatus: false,
-          options: [
-            {
-              selectid: "1",
-              scontent: "羽毛球",
-              selectnumber: "40"
-            },
-            {
-              selectid: "2",
-              scontent: "篮球",
-              selectnumber: "40"
-            },
-            {
-              selectid: "3",
-              scontent: "足球",
-              selectnumber: "40"
-            },
-            {
-              selectid: "4",
-              scontent: "乒乓球",
-              selectnumber: "70"
-            }
-          ]
-        },
-        {
-          questionid: "3",
-          questiontitle: "请问你有什么建议吗？",
-          topicid: "2", //0为单选题,1为多选题,2为填空题
-          answernumber: "100",
-          wordStatus: false,
-          barStatus: false,
-          pieStatus: false,
-          answers: [
-            {
-              name: "很好",
-              value: "20"
-            },
-            {
-              name: "厉害",
-              value: "30"
-            },
-            {
-              name: "不好",
-              value: "2"
-            },
-            {
-              name: "还行",
-              value: "10"
-            },
-            {
-              name: "挺差的",
-              value: "1"
-            },
-            {
-              name: "非常差",
-              value: "3"
-            }
-          ],
-          options: []
-        }
-      ],
-      paperid: "",
-      charts:[],
+      qsdata: [],
+      paperid: ""
     };
   },
-  created() { 
+  created() {
     //获取数据放到qsdata中
-/*     this.paperid = this.$route.query.paperid;
+    this.paperid = this.$route.query.paperid;
     api
-      .GetResultToAnalysis(this.paperid)
+      .GetResultToAnalysis({
+        userid: this.$route.query.userid,
+        paperid: this.$route.query.paperid
+      })
       .then(res => {
         if (res.code === "01") {
           if (this.qsdata.length !== 0) {
@@ -213,6 +120,7 @@ export default {
           for (let i = 0; i < res.result.length; i++) {
             this.qsdata.push(res.result[i]);
           }
+          console.log(this.qsdata);
         } else if (res.code === "03") {
           //没退出页面过了一天之后，刷新页面后继续，要求重新登录
           this.$router.push({ path: "/login", query: { no_token: 1 } });
@@ -222,10 +130,13 @@ export default {
       })
       .catch(error => {
         this.$message({ type: "info", message: error });
-      }); */
-          //初始化渲染echarts的块的大小
+      });
+    //初始化渲染echarts的块的大小
   },
   methods: {
+    round(num){
+      return Math.round(num);
+    },
     drawBar(questionid, xdata, ydata) {
       let myChart = this.$echarts.init(
         document.getElementById(questionid),
@@ -457,7 +368,7 @@ export default {
           }
         }
       });
-    },
+    }
   }
 };
 </script>
@@ -480,16 +391,20 @@ export default {
   width: 100%;
   margin: calc(10vh) auto;
 }
-.charts-item{
-  width:calc(80vw);
-  height:calc(40vh);
+.charts-item {
+  width: calc(80vw);
+  height: calc(40vh);
 }
-.app{
-  width:calc(80vw);
-  top:0; bottom:0; left:0; right:0; margin:auto;
+.app {
+  width: calc(80vw);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
-.table-span{
-  width:100%;
+.table-span {
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;

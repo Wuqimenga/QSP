@@ -11,8 +11,8 @@
         <el-table-column label="序号" type="index" :index="indexMethod" width="50px">
         </el-table-column>
         <el-table-column prop="anstime" label="创建时间"></el-table-column>
-        <el-table-column prop="IP" label="ip地址"></el-table-column>
-        <el-table-column prop="location" label="ip地址"></el-table-column>
+        <el-table-column prop="ip" label="ip地址"></el-table-column>
+        <!-- <el-table-column prop="location" label="ip地址"></el-table-column> -->
         <el-table-column>
           <template slot-scope="scope">
             <el-button class="deleteBut" @click="deleteAction(scope.$index)">删除</el-button>
@@ -37,7 +37,6 @@
 <script>
      //Result.vue//参考设计稿的统计页面，提交问卷id，返回问卷的总体填写信息，问卷id参考share
     import api from "../fetch/api";
-    import answerData from "../../static/answerData"
 
     export default {
         name: "Result",
@@ -47,7 +46,7 @@
             return{
               //userId:this.$route.params.userId,
 
-              paperId:this.$route.params.paperid,//问卷id
+              paperId:this.$route.query.paperid,//问卷id
               //数组形式
               ansData:[],
               pageSize: 12,//每一页的记录数量
@@ -56,18 +55,15 @@
             }
         },
 
-      //数组赋值，测试数据时用
-        mounted() {
-          this.getAnswerData()
-        },
 
         //后台传入数据的时候使用，为ansData赋值
         created() {
           api
-            .GetStatics(this.paperId)// 提交问卷id到后端
+            .GetStatics({paperid:this.paperId})// 提交问卷id到后端
             .then(res =>{
               if(res.code == "01"){
                 this.ansData=res.result;
+                console.log(this.ansData);
               }else{
                 this.$alert(res.result,"无法获取答卷列表",{
                   confirmButtonText:"确定"
@@ -83,10 +79,6 @@
 
         methods:{
 
-          //数组赋值，测试数据时用
-          getAnswerData(){
-            this.ansData=answerData.answerData;
-          },
 
           back(){this.$route.go(-1);},
 
@@ -126,17 +118,17 @@
             })
             .then(()=>{
               //从页面上删除答卷
-              var paperId = this.ansData[index].paperid;
-              var IP = this.ansData[index].IP;
+              var IP = this.ansData[index].ip;
               this.ansData.splice(index,1);
               console.log(JSON.stringify(this.ansData));
 
               //调用api接口，将删除后的数据写进后端数据库
               api
-              .DeleteAnswer(paperId,IP)
+              .DeleteAnswer({paperid:this.paperId,ip:IP})
               .then(res=>{
                 if(res.code == '01'){
-                  this.$router.go(-1);
+                  //this.$router.go(-1);
+                  this.$message({type:"info",message:"删除成功"})
                 }else {
                   this.$alert(res.result,"删除失败",{
                     confirmButtonText:'确定'
@@ -156,7 +148,7 @@
 
           }
         }
-    } 
+    }
 </script>
 
 <style scoped>

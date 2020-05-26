@@ -230,7 +230,6 @@
                     {
                         selectid://选项编号
                         scontent://选项内容
-                        goquestion://关联关系
                     },
                     ...
                 ]
