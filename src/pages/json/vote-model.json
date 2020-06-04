@@ -11,8 +11,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "聚餐",
@@ -38,8 +38,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": 5,
-			"option_index": [0]
+			"queid": 5,
+			"optionindex": [0]
 		},
 		"min": 1,
 		"max": 4,
@@ -64,8 +64,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": 5,
-			"option_index": [1]
+			"queid": 5,
+			"optionindex": [1]
 		},
 		"min": 1,
 		"max": 4,
@@ -90,8 +90,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": 5,
-			"option_index": [2]
+			"queid": 5,
+			"optionindex": [2]
 		},
 		"options": [{
 			"scontent": "爬山",
