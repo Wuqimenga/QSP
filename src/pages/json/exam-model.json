@@ -11,10 +11,11 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"options":[]
 	}, {
 		"show": false,
 		"questionid": 2,
@@ -23,10 +24,11 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
-		"scontent": ""
+		"scontent": "",
+		"options":[]
 	}, {
 		"show": false,
 		"questionid": 3,
@@ -35,8 +37,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "1个月",
@@ -56,8 +58,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "正确",
@@ -74,8 +76,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"min": 1,
 		"max": 4,
@@ -100,8 +102,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"scontent": "",
 		"goquestion": []

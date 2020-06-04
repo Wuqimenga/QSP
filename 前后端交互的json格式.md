@@ -164,36 +164,54 @@
         createdtime// 创建时间
         papertitle,// 问卷标题
         questions[
+            /* 单选题 */
             {
                 *err:// 题目填写是否符合要求
                 *show:// 在编辑时是表示编辑面板的显示，在数据库表示题目是否显示
-                type:// 题目类型
-        
+                type:0// 题目类型
                 questionid:// 问题编号
                 questiontitle:// 题目标题
                 ismust:// 是否必答
-                /* 单选题 */
                 options:[
                     {
-                        selectid://选项编号
+                        selectid://选项编号,从1开始
                         scontent://选项内容
                         goquestion://关联关系
                     },
                     ...
                 ]
+            },
+            /* 多选题 */
+            {
+                *err:// 题目填写是否符合要求
+                *show:// 在编辑时是表示编辑面板的显示，在数据库表示题目是否显示
+                type:1// 题目类型
+        
+                questionid:// 问题编号
+                questiontitle:// 题目标题
+                ismust:// 是否必答
                 
-                /* 多选题 */
                 min://最大选项数
                 max://最小选项数
                 options:[
                     {
-                        selectid://选项编号
+                        selectid://选项编号，从1开始
                         scontent:// 选项内容
                     },
                     ...
                 ]
             },
-            ...
+            /* 填空题 */
+            {
+                *err:// 题目填写是否符合要求
+                *show:// 在编辑时是表示编辑面板的显示，在数据库表示题目是否显示
+                type:2// 题目类型
+        
+                questionid:// 问题编号
+                questiontitle:// 题目标题
+                ismust:// 是否必答
+                options:[]
+            }
         ]
     }
     ```

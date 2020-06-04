@@ -11,11 +11,12 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"scontent": "",
-		"goquestion": []
+		"goquestion": [],
+		"options":[]
 	}, {
 		"show": true,
 		"questionid": 2,
@@ -24,17 +25,15 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "男",
-			"goquestion": [],
-			"selectid": 0
+			"goquestion": []
 		}, {
 			"scontent": "女",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}]
 	}, {
 		"show": true,
@@ -44,29 +43,24 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "就业",
-			"goquestion": [],
-			"selectid": 0
+			"goquestion": []
 		}, {
 			"scontent": "自主创业",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}, {
 			"scontent": "专升本",
-			"goquestion": [],
-			"selectid": 2
+			"goquestion": []
 		}, {
 			"scontent": "出国",
-			"goquestion": [],
-			"selectid": 3
+			"goquestion": []
 		}, {
 			"scontent": "读研",
-			"goquestion": [],
-			"selectid": 4
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
@@ -76,21 +70,18 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "学校附近",
-			"goquestion": [],
-			"selectid": 0
+			"goquestion": []
 		}, {
 			"scontent": "回乡",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}, {
 			"scontent": "一线城市",
-			"goquestion": [],
-			"selectid": 2
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
@@ -100,17 +91,15 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "是",
-			"goquestion": [],
-			"selectid": 0
+			"goquestion": []
 		}, {
 			"scontent": "否",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
@@ -120,21 +109,18 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "校方",
-			"goquestion": [],
-			"selectid": 0
+			"goquestion": []
 		}, {
 			"scontent": "找关系",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}, {
 			"scontent": "靠自己",
-			"goquestion": [],
-			"selectid": 2
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
@@ -144,17 +130,15 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "是",
-			"goquestion": [7, 8, 9],
-			"selectid": 0
+			"goquestion": [7, 8, 9]
 		}, {
 			"scontent": "否",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
@@ -164,25 +148,21 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "2000以下",
-			"goquestion": [],
-			"selectid": 0
+			"goquestion": []
 		}, {
 			"scontent": "2000到3000",
-			"goquestion": [],
-			"selectid": 1
+			"goquestion": []
 		}, {
 			"scontent": "3000到4000",
-			"goquestion": [],
-			"selectid": 2
+			"goquestion": []
 		}, {
 			"scontent": "4000以上",
-			"goquestion": [],
-			"selectid": 3
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
@@ -192,26 +172,22 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"min": 2,
 		"max": 4,
 		"options": [{
 			"scontent": "五险一金",
-			"selectid": 0,
 			"goquestion": []
 		}, {
 			"scontent": "出国进修",
-			"selectid": 1,
 			"goquestion": []
 		}, {
 			"scontent": "带薪休假",
-			"selectid": 2,
 			"goquestion": []
 		}, {
 			"scontent": "节日福利",
-			"selectid": 3,
 			"goquestion": []
 		}],
 		"ans": []
@@ -223,11 +199,12 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"scontent": "",
-		"goquestion": []
+		"goquestion": [],
+		"options":[]
 	}],
 	"papertitle": "大学生就业意向调查表",
 	"ip": ""

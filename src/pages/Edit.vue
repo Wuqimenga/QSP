@@ -3,7 +3,7 @@
     <vheader content="编辑" :backRouter="this.$router" />
     <div class="center-plane">
       <h3>formData:</h3>
-      <h4>{{formData}}</h4>
+      {{formData}}
       <el-form ref="rulesForm1" :rules="rules" :model="formData">
         <div class="edit-head-menu">
           <el-row :gutter="10">
@@ -111,7 +111,7 @@
                     </el-col>
                     <el-col :xs="18" :sm="12" :md="12" :lg="12" :xl="12">
                       <el-form-item
-                        :prop=""questions."+i_q+".questiontitle""
+                        :prop='"questions."+i_q+".questiontitle"'
                         :rules="rules.question_title"
                       >
                         <el-input v-model="question.questiontitle" placeholder="请填写题目" />
@@ -132,7 +132,7 @@
                         <div class="small-title">选项</div>
                       </el-col>
                       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
-                        <el-form-item :prop=""questions."+i_q+".options."+i_o+".scontent"">
+                        <el-form-item :prop='"questions."+i_q+".options."+i_o+".scontent"'>
                           <el-input v-model="option.scontent" placeholder="请填写选项内容" />
                         </el-form-item>
                       </el-col>
@@ -285,7 +285,7 @@ export default {
         paperid: "", // 问卷id，等到保存问卷时，才在后端进行设置
         ispublish: 0, // 是否发布
         userid: this.$route.query.userid, // 用户id,获取从Model传来的用户id
-        createtime: new Date().toLocaleDateString(), // 问卷创建时间
+        createtime: "", // 问卷创建时间
         papertitle: "问卷标题",
         questions: []
       },
@@ -318,7 +318,7 @@ export default {
           paperid: "", // 问卷id，等到保存问卷时，才在后端进行设置
           ispublish: 0, // 是否发布
           userid: this.$route.query.userid, // 用户id,获取从Model传来的用户id
-          createtime: new Date().toLocaleDateString(), // 问卷创建时间
+          createtime: "", // 问卷创建时间
           papertitle: "问卷标题",
           questions: []
         };
@@ -391,7 +391,7 @@ export default {
     // 提交数据前对数据进行处理，增加ip、goquestion、ans属性，返回处理好的对象array，不改变原有的 this.formData
     handleData(formData) {
       var array = formData; // 返回的结果,to是跳转问题的index
-      array.createtime = format(array.createtime, "YYYY-MM-DD");
+      array.createtime = format(new Date().toLocaleDateString(), "YYYY-MM-DD");
       for (
         var i = 0;
         i < array.questions.length;
@@ -412,18 +412,21 @@ export default {
               for (
                 var k = 0;
                 k < array.questions[i].rela.optionindex.length;
-                k++ // 被关联题目option_index的下标k
+                k++ // 被关联题目optionindex的下标k
               ) {
                 array.questions[j].options[
                   array.questions[i].rela.optionindex[k]
                 ].goquestion.push(i);
-                var t =
-                  array.questions[j].options[
-                    array.questions[i].rela.optionindex[k]
-                  ].goquestion;
-                array.questions[j].options[
-                  array.questions[i].rela.optionindex[k]
-                ].goquestion = new Set(t); // 去除重复项
+
+                // 下面这个不用加，因为goquestion是由optionindex确定的，而optionindex与多选组件绑定，值是不会重复的，加了反而有个奇怪的问题，第一次预览goquestion会是：{'_c':[]}
+                // var t =
+                //   array.questions[j].options[
+                //     array.questions[i].rela.optionindex[k]
+                //   ].goquestion;
+                // array.questions[j].options[
+                //   array.questions[i].rela.optionindex[k]
+                // ].goquestion = new Set(t); // 去除重复项
+                
               }
               break; // 找到之后可以直接处理下一题
             }
@@ -431,18 +434,21 @@ export default {
         } else {
           array.questions[i].show = true;
         }
+
+        // 填空题选项编号为0，多选题，单选题选项编号从1开始
         if (array.questions[i].type < 2) {
           // 在formatData里添加ans，记录选择题的答案（所选选项的下标）
           if (array.questions[i].type == 0) {
-            // 如果是单选题
-            array.questions[i].selectid = i + 1;
+            // 如果是单选题,ans是int类型（先用null代替）
+            array.questions[i].ans = null;
           } else if (array.questions[i].type == 1) {
-            //如果是多选题
+            // 如果是多选题，ans是数组类型
             array.questions[i].ans = [];
           }
           // 添加选项id
+          // 如果是选择题，options长度不为0，selectid从1开始编号
           for (var j = 0; j < array.questions[i].options.length; j++) {
-            array.questions[i].options[j].selectid = j;
+            array.questions[i].options[j].selectid = j+1;
           }
         }
       }
@@ -614,6 +620,7 @@ export default {
       else {
         question.scontent = "";
         question.goquestion = [];
+        question.options=[];
       }
       this.formData.questions.push(question);
     },

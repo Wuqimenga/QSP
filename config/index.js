@@ -46,7 +46,7 @@ module.exports = {
       host: "localhost",
       db: "loan",
       username: "root",
-      password: "tyfwqm111"
+      password: "123456"
     },
     secret:"qsp"
   },

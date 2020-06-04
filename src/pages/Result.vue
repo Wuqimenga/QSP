@@ -10,13 +10,11 @@
         border
       >
         <el-table-column label="序号" type="index" :index="indexMethod" width="50px"></el-table-column>
-        <el-table-column prop="ip" label="ip地址"></el-table-column>
-        <el-table-column prop="anstime" label="创建时间"></el-table-column><<<<<<< HEAD
+        <el-table-column prop="anstime" label="创建时间"></el-table-column>
         <el-table-column prop="ip" label="ip地址"></el-table-column>
         <!-- <el-table-column prop="location" label="ip地址"></el-table-column> -->
-        =======
-        <el-table-column prop="location" label="地区"></el-table-column>>>>>>>> b24b5053b896daf6d9072453a0d62d153bb10683
-        <el-table-column>
+        <el-table-column prop="location" label="地区"></el-table-column>
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button class="deleteBut" @click="deleteAction(scope.$index)">删除</el-button>
           </template>

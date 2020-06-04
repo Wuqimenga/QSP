@@ -12,8 +12,8 @@
         "err": false,
         "ismust": 1,
         "rela": {
-            "question_id": null,
-            "option_index": []
+            "queid": null,
+            "optionindex": []
         },
         "options": [{
             "scontent": "问题一的选项一",
@@ -33,8 +33,8 @@
         "err":false,
         "ismust":0,
         "rela": {
-            "question_id":0, 
-            "option_index": [2]
+            "queid":0, 
+            "optionindex": [2]
         },
         "min":1, 
         "max": 2,
@@ -56,8 +56,8 @@
         "err": false,
         "ismust":0,
         "rela": {
-            "question_id":0, 
-            "option_index": [1]
+            "queid":0, 
+            "optionindex": [1]
         },
         "scontent": "",
 		"goquestion": []

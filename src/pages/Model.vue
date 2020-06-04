@@ -47,10 +47,15 @@ export default {
   data() {
     return {
       querylist: {
-        userid: this.$route.query.userid,
+        userid: this.$route.query.userid,// 如果不在这里获取userid，会在localhost保存一个nullEdit
         modeltype: 0
       }
     };
+  },
+  created(){
+    this.userid=this.$route.query.userid;
+    //清除localStorage里面的数据，不然下次进入空白问卷会读取上次编辑的内容
+    window.localStorage.removeItem(this.userid+"Edit");
   },
   methods: {
     chooseType(type) {
