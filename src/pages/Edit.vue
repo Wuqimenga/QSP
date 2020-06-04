@@ -3,7 +3,7 @@
     <vheader content="编辑" :backRouter="this.$router" />
     <div class="center-plane">
       <h3>formData:</h3>
-      <h4>{{formData}}</h4>
+      {{formData}}
       <el-form ref="rulesForm1" :rules="rules" :model="formData">
         <div class="edit-head-menu">
           <el-row :gutter="10">
@@ -111,7 +111,7 @@
                     </el-col>
                     <el-col :xs="18" :sm="12" :md="12" :lg="12" :xl="12">
                       <el-form-item
-                        :prop=""questions."+i_q+".questiontitle""
+                        :prop='"questions."+i_q+".questiontitle"'
                         :rules="rules.question_title"
                       >
                         <el-input v-model="question.questiontitle" placeholder="请填写题目" />
@@ -132,7 +132,7 @@
                         <div class="small-title">选项</div>
                       </el-col>
                       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
-                        <el-form-item :prop=""questions."+i_q+".options."+i_o+".scontent"">
+                        <el-form-item :prop='"questions."+i_q+".options."+i_o+".scontent"'>
                           <el-input v-model="option.scontent" placeholder="请填写选项内容" />
                         </el-form-item>
                       </el-col>
@@ -285,7 +285,7 @@ export default {
         paperid: "", // 问卷id，等到保存问卷时，才在后端进行设置
         ispublish: 0, // 是否发布
         userid: this.$route.query.userid, // 用户id,获取从Model传来的用户id
-        createtime: new Date().toLocaleDateString(), // 问卷创建时间
+        createtime: "", // 问卷创建时间
         papertitle: "问卷标题",
         questions: []
       },
@@ -318,7 +318,7 @@ export default {
           paperid: "", // 问卷id，等到保存问卷时，才在后端进行设置
           ispublish: 0, // 是否发布
           userid: this.$route.query.userid, // 用户id,获取从Model传来的用户id
-          createtime: new Date().toLocaleDateString(), // 问卷创建时间
+          createtime: "", // 问卷创建时间
           papertitle: "问卷标题",
           questions: []
         };
@@ -391,7 +391,8 @@ export default {
     // 提交数据前对数据进行处理，增加ip、goquestion、ans属性，返回处理好的对象array，不改变原有的 this.formData
     handleData(formData) {
       var array = formData; // 返回的结果,to是跳转问题的index
-      array.createtime = format(array.createtime, "YYYY-MM-DD");
+      console.log(array);
+      array.createtime = format(new Date().toLocaleDateString(), "YYYY-MM-DD");
       for (
         var i = 0;
         i < array.questions.length;
@@ -412,7 +413,7 @@ export default {
               for (
                 var k = 0;
                 k < array.questions[i].rela.optionindex.length;
-                k++ // 被关联题目option_index的下标k
+                k++ // 被关联题目optionindex的下标k
               ) {
                 array.questions[j].options[
                   array.questions[i].rela.optionindex[k]
@@ -614,6 +615,7 @@ export default {
       else {
         question.scontent = "";
         question.goquestion = [];
+        question.options=[];
       }
       this.formData.questions.push(question);
     },
