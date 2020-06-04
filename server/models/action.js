@@ -12,13 +12,7 @@ _model.findOne = async function (sequelize, condition) {
   return await sequelize.findOne(condition)
 }
 
-_model.findById = async function (sequelize, id) {
-  return await sequelize.findOne({
-    where: {
-      id: id
-    }
-  });
-};
+
 
 
 

@@ -10,7 +10,7 @@ var answerController=require('../controllers/answer')
 // 在每一个请求被处理之前都会执行的middleware
 router.use(function(req, res, next) {
   req.session.secret=config.dev.secret;//这个有什么用吗？
-  if(req.url!='/login'&&req.url!='/register'&&req.url!='/get-questionnaire-to-answer'&&req.url!='/post-answers'){//如果不是登录和注册界面，就要对登录token验证
+  if(req.url!='/login'&&req.url!='/register'&&req.url!='/get-questionnaire-to-answer'&&req.url!='/post-answers'&&req.url!='/post-new-questionnaire'){//如果不是登录和注册界面，就要对登录token验证
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
       jwt.verify(token, req.session.secret, function (err, decoded) {

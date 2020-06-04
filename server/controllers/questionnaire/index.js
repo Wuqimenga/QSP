@@ -11,7 +11,6 @@ module.exports = {
     try {
       var result = [];
       var condition = {};
-      console.log(req.body.papertitle);
       if (req.body.explore == "true") {
         condition = {
           attributes: ["paperid", "papertitle", "ispublish", "createtime"],
@@ -48,7 +47,7 @@ module.exports = {
             paperid: data[i].paperid
           }
         };
-        var data2 = await _model.findAndCountAll(answer, con);
+        var data2 = await _model.findAndCountAll(answersheet, con);
         body2.answersheetnumber = data2.count;
         result.push(body2);
       }
@@ -147,6 +146,7 @@ module.exports = {
 
   postNewQuestionnaire: async function(req, res) {
     var body = { code: "01", result: "" };
+
     try {
       var newquestionnaire = {
         papertitle: "",
@@ -155,44 +155,46 @@ module.exports = {
         createtime: ""
       };
       newquestionnaire.papertitle = req.body.papertitle;
-      if (req.body.ispublish == "false") {
-        newquestionnaire.ispublish = 0;
-      } else {
-        newquestionnaire.ispublish = 1;
-      }
-      console.log(req.body);
+      newquestionnaire.ispublish = req.body.ispublish;
       newquestionnaire.createtime = req.body.createtime; //这个在数据生成的时候会自动生成的吧
       newquestionnaire.userid = req.body.userid; //这个应该是必须的。
       var data = await _model.create(questionnaire, newquestionnaire);
       var ques = req.body.questions;
       for (let i = 0; i < ques.length; i++) {
         var que = {
-          paperid: "",
-          questionid: "",
-          papertitle: "",
-          type: "",
-          ismust: "",
-          min: "",
-          max: ""
+          paperid: 0,
+          questionid: 0,
+          questiontitle: "",
+          type: 0,
+          ismust: 0,
+          min: 0,
+          max: 0
         };
         que.questionid = ques[i].questionid;
-        que.questiontitle = ques[i].papertitle;
+        que.questiontitle = ques[i].questiontitle;
         que.ismust = ques[i].ismust;
-        que.paperid = data1.paperid;
-        que.type = ques[i].topicid;
-        if (ques.topicid == "1") {
-          que.max = ques.max;
-          que.min = ques.min;
+        que.paperid = data.dataValues.paperid;
+        que.type = ques[i].type;
+        if (ques[i].type == "1") {
+          que.max = ques[i].max;
+          que.min = ques[i].min;
         }
         await _model.create(question, que);
-        for (let j = 0; j < ques.options.length(); j++) {
+        for (let j = 0; j < ques[i].options.length; j++) {
           let op = {
-            paperid: data1.paperid,
+            paperid: data.dataValues.paperid,
             questionid: ques[i].questionid,
-            selectid: ques.options[j].selectid,
-            scontent: ques.options[j].scontent,
-            goquestion: ques.options[j].goquestion
+            selectid: ques[i].options[j].selectid,
+            scontent: ques[i].options[j].scontent,
+            goquestion: ""
           };
+          if (ques[i].options[j].goquestion.length > 0) {
+            var tempgo = "";
+            for (let z = 0; z < ques[i].options[j].goquestion.length; z++) {
+              tempgo = tempgo + ques[i].options[j].goquestion[z] + "/";
+            }
+            op.goquestion = tempgo;
+          }
           await _model.create(options, op);
         }
       }
@@ -207,27 +209,76 @@ module.exports = {
   getQuestionnaireToAnswer: async function(req, res) {
     var body = { code: "01", result: "" };
     try {
-      questionnaire.belongsTo(question);
-      question.belongsTo(options);
-      question.hasMany(questionnaire);
-      options.hasMany(question);
-      var condition = {
-        include: [
-          {
-            where: {
-              paperid: req.body.paperid
-            },
-            model: question,
-            include: [
-              {
-                model: options
-              }
-            ]
-          }
-        ]
+      var con1 = {
+        attributes: ["papertitle", "ispublish", "createtime"],
+        where: {
+          paperid: req.body.paperid
+        }
       };
-      var data = await _model.findAll(questionnaire, condition);
+      var res1 = await _model.findOne(questionnaire,con1);
+      var data = {
+        paperid: req.body.paperid,
+        papertitle: res1.papertitle,
+        ispublish: res1.ispublish,
+        createtime: res1.createtime,
+        questions: []
+      };
+      if(!res1.ispublish)
+      {
+        body.code="02",
+        body.result="问卷未发布"
+      }
+      else{
+      var con2 = {
+        attributes: [
+          "questionid",
+          "questiontitle",
+          "type",
+          "ismust",
+          "min",
+          "max"
+        ],
+        where: {
+          paperid: req.body.paperid
+        }
+      };
+      var res2 = await _model.findAll(question,con2);
+      for (let i = 0; i < res2.length; i++) {
+        let que = {
+          questionid: res2[i].questionid,
+          questiontitle: res2[i].questiontitle,
+          type: res2[i].type,
+          ismust: res2[i].ismust,
+          min: 0,
+          max: 0,
+          options: []
+        };
+        if (type <= 1) {
+          let con3 = {
+            attributes: ["selectid", "scontent", "goquestion"],
+            where: {
+              paperid: req.body.paperid,
+              questionid: res2[i].questionid
+            }
+          };
+
+          let res3 = await _model.findAll(options,con3);
+          for(let j=0;j<res3.length;j++){
+            if(res3[j].goquestion!="")
+            {
+              res3[j].goquestion=res3[j].goquestion.split("/");
+            }
+          }
+          que.options = res3;
+        }
+        if (type == 1) {
+          que.min = res2[i].min;
+          que.max = res2[i].max;
+        }
+        data.questions.push(que);
+      }
       body.result = data;
+    }
     } catch (e) {
       body.code = "02";
       body.message = e.message;

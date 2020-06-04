@@ -2,16 +2,14 @@
   <div id="app">
     <!-- 这个按钮可以放在问卷列表里面，需要获取问卷id -->
     <!-- <el-button @click="fixQuestionnaire(paperid)">修改</el-button> -->
-    
-    <vheader content="主页" :backRouter="this.$router"/>
+
+    <vheader content="主页" :backRouter="this.$router" />
     <div style="margin-top:calc(1vh)">
       <el-row type="flex" justify="center" align="center">
         <el-col :xs="20" :lg="10">
-          <el-input
-            @keyup.enter="exploreAction"
-            v-model="querylist.papertitle"
-            placeholder="搜索问卷"
-          ><el-button slot="append" icon="el-icon-search" @click="exploreAction()"></el-button></el-input>
+          <el-input @keyup.enter="exploreAction" v-model="querylist.papertitle" placeholder="搜索问卷">
+            <el-button slot="append" icon="el-icon-search" @click="exploreAction()"></el-button>
+          </el-input>
         </el-col>
       </el-row>
     </div>
@@ -55,11 +53,7 @@
     <div style="margin-top:calc(1vh)">
       <el-row type="flex" justify="center" align="center">
         <el-col :xs="20" :lg="10">
-          <el-card
-            v-for="(item,key) in list"
-            :key="key"
-            :body-style="{ padding: '10px' }"
-          >
+          <el-card v-for="(item,key) in list" :key="key" :body-style="{ padding: '10px' }">
             <div>
               <span class="questionnaire-name">{{item.papertitle}}</span>
               <ul class="header-ul-right">
@@ -101,7 +95,7 @@ export default {
   data() {
     return {
       querylist: {
-        userid: "",
+        userid: this.$route.query.userid,
         status: "0",
         timeorder: true,
         explore: false,
@@ -113,7 +107,6 @@ export default {
     };
   },
   created() {
-    //先从本地存储提取userid;
     this.querylist.userid = this.$route.query.userid;
     //根据userid观察有没有意外退出未保存的问卷数据
     let unsavedQuestionnaire = localStorage.getItem(
@@ -135,20 +128,23 @@ export default {
                 localStorage.removeItem(this.querylist.userid + "Edit");
               } else if (res.code === "03") {
                 //没退出页面过了一天之后，刷新页面后继续，要求重新登录
+                this.$alert("登录过期，请重新登录", "提示", {
+                  confirmButtonText: "确定"
+                });
                 this.$router.push({ path: "/login", query: { no_token: 1 } });
               } else {
-                this.$message({ type: "info", message: res.result });
+                this.$message({ type: "warning", message: res.result });
               }
             })
             .catch(error => {
-              this.$message({ type: "info", message: error });
+              this.$message.error(error);
             });
         })
         .catch(() => {
-          localStorage.removeItem(this.userid + "Edit");
+          localStorage.removeItem(this.querylist.userid + "Edit");
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已删除"
           });
         });
     }
@@ -159,55 +155,59 @@ export default {
       .then(res => {
         if (res.code === "01") {
           //清空list
-          if(this.list.length!==0)
-          {
+          if (this.list.length !== 0) {
             this.list.splice(0, this.list.length);
           }
           for (let i = 0; i < res.result.length; i++) {
             this.list.push(res.result[i]);
           }
         } else if (res.code === "03") {
+          this.$alert("登录过期，请重新登录", "提示", {
+            confirmButtonText: "确定"
+          });
           this.$router.push({ path: "/login", query: { no_token: 1 } });
         } else {
-          this.$message({ type: "info", message: res.result });
+          this.$message({ type: "warning", message: res.result });
         }
       })
       .catch(error => {
-        this.$message({ type: "info", message: error });
+        this.$message.error(error);
       });
   },
   methods: {
     // 修改问卷
-    fixQuestionnaire(paperid){
-      window.localStorage.clear();
-      this.$router.push({path:"/edit",query:{paperid:paperid}});
+    fixQuestionnaire(paperid) {
+      //window.localStorage.clear();
+      this.$router.push({ path: "/edit", query: { paperid: paperid } });
     },
     exploreAction: function() {
       //传问卷名字给后台，后台返回问卷的整体信息，在按钮下面以卡片的形式存在
       this.querylist.explore = true;
-      this.querylist.status="0";
-      this.querylist.timeorder="true";
+      this.querylist.status = "0";
+      this.querylist.timeorder = "true";
       api
-      .GetQuestionnaires(this.querylist)
-      .then(res => {
-        if (res.code === "01") {
-          //清空list
-          if(this.list.length!==0)
-          {
-            this.list.splice(0, this.list.length);
+        .GetQuestionnaires(this.querylist)
+        .then(res => {
+          if (res.code === "01") {
+            //清空list
+            if (this.list.length !== 0) {
+              this.list.splice(0, this.list.length);
+            }
+            for (let i = 0; i < res.result.length; i++) {
+              this.list.push(res.result[i]);
+            }
+          } else if (res.code === "03") {
+            this.$alert("登录过期，请重新登录", "提示", {
+              confirmButtonText: "确定"
+            });
+            this.$router.push({ path: "/login", query: { no_token: 1 } });
+          } else {
+            this.$message({ type: "warning", message: res.result });
           }
-          for (let i = 0; i < res.result.length; i++) {
-            this.list.push(res.result[i]);
-          }
-        } else if (res.code === "03") {
-          this.$router.push({ path: "/login", query: { no_token: 1 } });
-        } else {
-          this.$message({ type: "info", message: res.result });
-        }
-      })
-      .catch(error => {
-        this.$message({ type: "info", message: error });
-      });
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
     },
     handleStatus(command) {
       //传用户id和command给后端，取相应的问卷数据按照时间正序的顺序返回,使用promise对象控制顺序
@@ -219,26 +219,28 @@ export default {
         this.querylist.status = "1";
       }
       api
-      .GetQuestionnaires(this.querylist)
-      .then(res => {
-        if (res.code === "01") {
-          //清空list
-          if(this.list.length!==0)
-          {
-            this.list.splice(0, this.list.length);
+        .GetQuestionnaires(this.querylist)
+        .then(res => {
+          if (res.code === "01") {
+            //清空list
+            if (this.list.length !== 0) {
+              this.list.splice(0, this.list.length);
+            }
+            for (let i = 0; i < res.result.length; i++) {
+              this.list.push(res.result[i]);
+            }
+          } else if (res.code === "03") {
+            this.$alert("登录过期，请重新登录", "提示", {
+              confirmButtonText: "确定"
+            });
+            this.$router.push({ path: "/login", query: { no_token: 1 } });
+          } else {
+            this.$message({ type: "warning", message: res.result });
           }
-          for (let i = 0; i < res.result.length; i++) {
-            this.list.push(res.result[i]);
-          }
-        } else if (res.code === "03") {
-          this.$router.push({ path: "/login", query: { no_token: 1 } });
-        } else {
-          this.$message({ type: "info", message: res.result });
-        }
-      })
-      .catch(error => {
-        this.$message({ type: "info", message: error });
-      });
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
     },
     handleOrder(command) {
       //传用户id和command给后端，取问卷数据按照相应的时间顺序排好返回，使用promise对象控制顺序
@@ -249,95 +251,96 @@ export default {
       } else {
         this.querylist.timeorder = true;
       }
-          api
-      .GetQuestionnaires(this.querylist)
-      .then(res => {
-        if (res.code === "01") {
-          //清空list
-          if(this.list.length!==0)
-          {
-            this.list.splice(0, this.list.length);
-          }
-          console.log(res.result);
-          for (let i = 0; i < res.result.length; i++) {
-            this.list.push(res.result[i]);
-          }
-        } else if (res.code === "03") {
-          this.$router.push({ path: "/login", query: { no_token: 1 } });
-        } else {
-          this.$message({ type: "info", message: res.result });
-        }
-      })
-      .catch(error => {
-        this.$message({ type: "info", message: error });
-      });
-    },
-    createQuestionnaire: function() {
-/*       this.$router.push({
-        name: "Model",
-        query: { userId: this.querylist.userId }
-      }); */
-      this.$router.push({name:'Edit',query:{userId:this.querylist.userid}});
-    },
-    allQuestionnaire: function() {
-      this.querylist.explore=false;
-      this.querylist.status = "0";
-      this.querylist.timeorder=true;
-    api
-      .GetQuestionnaires(this.querylist)
-      .then(res => {
-        if (res.code === "01") {
-          //清空list
-          if(this.list.length!==0)
-          {
-            this.list.splice(0, this.list.length);
-          }
-          console.log(res.result);
-          for (let i = 0; i < res.result.length; i++) {
-            this.list.push(res.result[i]);
-          }
-        } else if (res.code === "03") {
-          this.$router.push({ path: "/login", query: { no_token: 1 } });
-        } else {
-          this.$message({ type: "info", message: res.result });
-        }
-      })
-      .catch(error => {
-        this.$message({ type: "info", message: error });
-      });
-    },
-    logOut: function() {
-      this.$router.push({ path: "/login" });
-      localStorage.removeItem('token');
-    },
-    deleteAction: function(paperid) {
       api
-        .DeleteQuestionnaire({paperid:paperid})
+        .GetQuestionnaires(this.querylist)
         .then(res => {
           if (res.code === "01") {
-            this.list.forEach((qs,index)=>{
-                if(qs.paperid===paperid){
-                  this.list.splice(index,1);
-                }
-            })
-            this.$message({ type: "info", message: "删除成功" });
+            //清空list
+            if (this.list.length !== 0) {
+              this.list.splice(0, this.list.length);
+            }
+            console.log(res.result);
+            for (let i = 0; i < res.result.length; i++) {
+              this.list.push(res.result[i]);
+            }
           } else if (res.code === "03") {
+            this.$alert("登录过期，请重新登录", "提示", {
+              confirmButtonText: "确定"
+            });
             this.$router.push({ path: "/login", query: { no_token: 1 } });
           } else {
-            this.$message({ type: "info", message: res.result });
+            this.$message({ type: "warning", message: res.result });
           }
         })
         .catch(error => {
-          this.$message({ type: "info", message: error });
+          this.$message.error(error);
+        });
+    },
+    createQuestionnaire: function() {
+      this.$router.push({
+        name: "Model",
+        query: { userid: this.querylist.userid }
+      });
+      //this.$router.push({name:'Edit',query:{userId:this.querylist.userid}});
+    },
+    allQuestionnaire: function() {
+      this.querylist.explore = false;
+      this.querylist.status = "0";
+      this.querylist.timeorder = true;
+      api
+        .GetQuestionnaires(this.querylist)
+        .then(res => {
+          if (res.code === "01") {
+            //清空list
+            if (this.list.length !== 0) {
+              this.list.splice(0, this.list.length);
+            }
+            for (let i = 0; i < res.result.length; i++) {
+              this.list.push(res.result[i]);
+            }
+          } else if (res.code === "03") {
+            this.$alert("登录过期，请重新登录", "提示", {
+              confirmButtonText: "确定"
+            });
+            this.$router.push({ path: "/login", query: { no_token: 1 } });
+          } else {
+            this.$message({ type: "warning", message: res.result });
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
+    },
+    logOut: function() {
+      this.$router.push({ path: "/login" });
+      localStorage.removeItem("token");
+    },
+    deleteAction: function(paperid) {
+      api
+        .DeleteQuestionnaire({ paperid: paperid })
+        .then(res => {
+          if (res.code === "01") {
+            this.list.forEach((qs, index) => {
+              if (qs.paperid === paperid) {
+                this.list.splice(index, 1);
+              }
+            });
+            this.$message({ type: "info", message: "删除成功" });
+          } else if (res.code === "03") {
+            this.$alert("登录过期，请重新登录", "提示", {
+              confirmButtonText: "确定"
+            });
+            this.$router.push({ path: "/login", query: { no_token: 1 } });
+          } else {
+            this.$message({ type: "warning", message: res.result });
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
         });
     },
 
-    shareAction: function(paperid) {
-      this.$router.push({
-        name: "Share",
-        params: { userid: this.querylist.userid, paperid: paperid }
-      });
-    },
+    shareAction: function(paperid) {},
 
     resultAction: function(paperid) {
       this.$router.push({
@@ -347,24 +350,26 @@ export default {
     },
     changeStatus: function(paperid) {
       api
-        .ChangeReleaseStatus({paperid:paperid})
+        .ChangeReleaseStatus({ paperid: paperid })
         .then(res => {
           if (res.code === "01") {
-            this.list.forEach(qs=>{
-              if(qs.paperid===paperid)
-              {
-                qs.ispublish=!qs.ispublish;
+            this.list.forEach(qs => {
+              if (qs.paperid === paperid) {
+                qs.ispublish = !qs.ispublish;
               }
-            })
+            });
             this.$message({ type: "info", message: "修改成功" });
           } else if (res.code === "03") {
+            this.$alert("登录过期，请重新登录", "提示", {
+              confirmButtonText: "确定"
+            });
             this.$router.push({ path: "/login", query: { no_token: 1 } });
           } else {
-            this.$message({ type: "info", message: res.result });
+            this.$message({ type: "warning", message: res.result });
           }
         })
         .catch(error => {
-          this.$message({ type: "info", message: error });
+          this.$message(error);
         });
     }
   }
@@ -397,7 +402,6 @@ export default {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   display: inline-block;
-
   white-space: nowrap;
 }
 .li-right {
@@ -412,7 +416,7 @@ export default {
   border: 0;
   @media screen and (max-width: 800px) {
     display: none;
-  }
+  };
   display: inline-block;
 }
 .footer-ul-right {

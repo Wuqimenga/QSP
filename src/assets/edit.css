@@ -54,3 +54,20 @@
 .center{
     margin: auto;
 }
+
+.title{
+    font-size: large;
+    text-align: center;
+}
+.edit-btn{
+    font-size: small;
+    text-align: center;
+    color: #606266;
+    background-color: #EBEEF5;
+    height: 50px;
+    width: 100%;
+    padding: 5px;
+    margin: 0 0 15px 0;
+    border: 1px solid transparent;  
+    outline: none;   
+}

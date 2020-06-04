@@ -6,10 +6,10 @@
 	"questions": [{
 		"show": false,
 		"questionid": 5,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "以下活动哪个最喜欢？",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": null,
 			"option_index": []
@@ -33,10 +33,10 @@
 	}, {
 		"show": false,
 		"questionid": 6,
-		"topicid": 1,
+		"type": 1,
 		"questiontitle": "聚餐比较喜欢去哪？",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": 5,
 			"option_index": [0]
@@ -44,21 +44,25 @@
 		"min": 1,
 		"max": 4,
 		"options": [{
-			"scontent": "XX肥牛火锅"
+			"scontent": "XX肥牛火锅",
+			"goquestion": []
 		}, {
-			"scontent": "小X烤串店"
+			"scontent": "小X烤串店",
+			"goquestion": []
 		}, {
-			"scontent": "XX美食街"
+			"scontent": "XX美食街",
+			"goquestion": []
 		}, {
-			"scontent": "XX川菜馆"
+			"scontent": "XX川菜馆",
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
 		"questionid": 1,
-		"topicid": 1,
+		"type": 1,
 		"questiontitle": "室内游戏喜欢哪些？",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": 5,
 			"option_index": [1]
@@ -66,21 +70,25 @@
 		"min": 1,
 		"max": 4,
 		"options": [{
-			"scontent": "桌游"
+			"scontent": "桌游",
+			"goquestion": []
 		}, {
-			"scontent": "杀人游戏"
+			"scontent": "杀人游戏",
+			"goquestion": []
 		}, {
-			"scontent": "密室逃脱"
+			"scontent": "密室逃脱",
+			"goquestion": []
 		}, {
-			"scontent": "保龄球"
+			"scontent": "保龄球",
+			"goquestion": []
 		}]
 	}, {
 		"show": false,
 		"questionid": 2,
-		"topicid": 0,
+		"type": 0,
 		"questiontitle": "比较喜欢哪项室外运动？",
 		"err": false,
-		"ismust": true,
+		"ismust": 1,
 		"rela": {
 			"question_id": 5,
 			"option_index": [2]

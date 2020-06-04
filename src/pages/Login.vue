@@ -11,11 +11,7 @@
         <el-card>
           <el-form type="flex" justify="center" ref="loginForm" :model="user" :rules="rule">
             <el-form-item prop="name">
-              <el-input
-                @keyup.enter="loginActon"
-                v-model="user.name"
-                placeholder="用户名"
-              ></el-input>
+              <el-input @keyup.enter="loginActon" v-model="user.name" placeholder="用户名"></el-input>
             </el-form-item>
             <el-form-item porp="name">
               <el-input
@@ -45,8 +41,8 @@ export default {
     return {
       user: { name: "", password: "" },
       rule: {
-        name: [{required: true, message: '请输入用户名', trigger: "blur" }],
-        password: [{ required: true, message: '请输入密码', trigger: "blur" }]
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
@@ -59,7 +55,7 @@ export default {
   },
   methods: {
     loginAction: function() {
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
           api
             .Login(this.user)
@@ -68,15 +64,16 @@ export default {
                 //存储token到本地存储
                 localStorage.setItem("token", res.token);
                 //跳转到个人主页
-                this.$router.push({ path: '/home',query:{userid:res.result.userid}});
-              } else {
-                this.$alert(res.result, "提示", {
-                  confirmButtonText: "确定"
+                this.$router.push({
+                  path: "/home",
+                  query: { userid: res.result.userid }
                 });
+              } else {
+                this.$message({ type: "warning", message: res.result });
               }
             })
             .catch(error => {
-              console.log(error);
+              this.$message.error(error);
             });
         } else {
           return false;
@@ -84,7 +81,7 @@ export default {
       });
     },
     registerAction: function() {
-      this.$router.push({path:"/register"})
+      this.$router.push({ path: "/register" });
     }
   }
 };

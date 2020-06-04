@@ -1,4 +1,4 @@
-﻿+ 说明
++ 说明
 
   + 此文档主要说明code为01的时候，result里面放的json数据，还有前端传给后端的params里面的json结构.
   + 改变问卷发布状态和删除问卷的没有包含进来，在result里面放的数据没有要交互的
@@ -89,9 +89,9 @@
     ```json
     [//返回问题数组
     {
-    questionID://问题编号
+    questionid://问题编号
     questiontitle://标题内容
-    topicid://题目类型
+    type://题目类型
     answernumber://问题作答总人数
     
     answer:[/*这里放填空题所有回答经过分词以后统计词频的结果，例如填空题只有两个人答了,一个人的回答是”厉害啊，加油吧，少年！“，另一个是”厉害啊，加油吧，少女！“
@@ -113,7 +113,6 @@
     }
     ]
     ```
-    
 
 
 
@@ -132,7 +131,7 @@
 
     ```json
     {
-    IP://用户ip
+    ip://用户ip
     anstime://提交时间
     paperid://问卷id
     location://ip所属地区
@@ -151,16 +150,15 @@
     ```
 
   + 后端>>前端：无
-	
 
 + '/post-new-questionnaire'，提交新创建的问卷
 
   + 前端>>后端
 
     *号标注后端不用使用的属性
-    
+
     ```json
-{
+    {
         paperid:// 问卷编号
         ispublish// 是否发布
         createdtime// 创建时间
@@ -169,7 +167,7 @@
             {
                 *err:// 题目填写是否符合要求
                 *show:// 在编辑时是表示编辑面板的显示，在数据库表示题目是否显示
-                topicid:// 题目类型
+                type:// 题目类型
         
                 questionid:// 问题编号
                 questiontitle:// 题目标题
@@ -199,7 +197,6 @@
         ]
     }
     ```
-    
 
 * '/get-questionnaire-to-answer'，获取问卷信息生成问卷作答
 
@@ -213,42 +210,66 @@
 
     ``` json
     {
-        paperid:// 问卷编号
-        ispublish// 是否发布
-        createdtime// 创建时间
-        papertitle,// 问卷标题
-        questions:[
-            {
-                err:true// 题目填写是否符合要求，赋值为true
-                show:true// 在编辑时是表示编辑面板的显示，在数据库表示题目是否显示，赋值为true
-                topicid:// 题目类型,单选0,多选1，填空2
-                questionid:// 问题id
-                questiontitle:// 题目标题
-                ismust:// 是否必答
-                /* 单选题 */
-                options:[
-                    {
-                        selectid://选项编号
-                        scontent://选项内容
-                    },
-                    ...
-                ]
-                
-                /* 多选题 */
-                min://最大选项数
-                max://最小选项数
-                options:[
-                    {
-                        selectid://选项编号
-                        scontent:// 选项内容
-                        goquestion://逻辑关联
-                    },
-                    ...
-                ]
-                   
-            },
-            ...
-        ]
+    	"paperid": ""//问卷编号
+    	"ispublish"://是否发布
+    	"createtime":// 时间，例如：2020/5/25
+    	"papertitle": //问卷标题
+    	"questions": [{
+            /* 单选题 */
+    		"show": //问题是否显示，如果问题被关联，不显示
+    		"questionid": //题目编号
+    		"type": 0,//题目类型
+    		"questiontitle": //题目标题
+    		"err": false//默认值
+    		"ismust": //是否必答
+    		//"rela": {
+    		//	"queid": null,
+    		//	"optionindex": []
+    		//},
+    		"options": [{
+    			"scontent": //选项内容
+    			"goquestion": [],//关联题目编号
+    			"selectid": //题目编号
+    		}]
+    	}, {
+            /* 多选题 */
+    		//"show": //问题是否显示，如果问题被关联，不显示，前端生成，后端不用
+    		"questionid": //题目标题
+    		"type": 1,//题目类型
+    		"questiontitle": //题目内容
+    		"err": false,//默认值
+    		"ismust": //是否必答
+    		//"rela": {
+    		//	"queid": null,
+    		//	"optionindex": []
+    		//},
+    		"min": //最少选择选项数
+    		"max": //最多选择选项数
+    		"options": [{
+    			"scontent": //选项内容
+    			"goquestion": []
+    			"selectid": //选项编号
+    		}, {
+    			"scontent": //选项内容
+    			"goquestion": []
+    			"selectid": //选项编号
+    		}],
+    		"ans": []//默认值
+    	}, {
+            //"show": //问题是否显示，如果问题被关联，不显示，前端生成，后端不用
+    		"questionid": //题目编号
+    		"type": 2,//题目类型
+    		"questiontitle": //题目内容
+    		"err": false,//默认值
+    		"ismust": //是否必答
+    		//"rela": {
+    		//	"queid": null,
+    		//	"optionindex": []
+    		//},
+    		"scontent": //填空内容
+    		"goquestion": []
+    	}],
+    	"ip": ""//默认值
     }
     ```
 
@@ -256,37 +277,75 @@
 
   * 前端>>后端
 
-    没用到的字段没有展示
-  
+    
+
   ``` json
   {
-      paperid:// 问卷编号
-      papertitle:// 问卷标题
-      ispublish:// 是否发布
-      createtime:// 创建时间
-      anstime:// 回答时间
-      ip:// 填写者的ip
-      questions:[
-          /* 填空题 */
-          {
-              questionid// 题目编号
-              questiontitle:// 题目
-              ismust:// 是否必答
-              topicid:// 题目类型
-              answer:// 填空的内容
-          }
-          /* 选择题 */
-          {
-              questionid// 题目编号
-              questiontitle:// 题目
-              ismust:// 是否必答
-              topicid:// 题目类型
-              answer:[]// 选择的选项的编号
-          }
-      ]
+  	"paperid": "",
+  	"ispublish": 0,
+  	"createtime": "2020/5/25",//创建时间
+  	"papertitle": "问卷标题",
+  	"questions": [{
+          /* 单选题 */
+  		"show": true,
+  		"questionid": 1,
+  		"type": 0,
+  		"questiontitle": "题目",
+  		"err": false,
+  		"ismust": 0,
+  		"rela": {
+  			"queid": null,
+  			"optionindex": []
+  		},
+  		"options": [{
+  			"scontent": "选项",
+  			"goquestion": [],
+  			"selectid": 0
+  		}],
+          ans://答案，整数，选项编号
+  	}, {
+          /* 多选题 */
+  		"show": true,
+  		"questionid": 2,
+  		"type": 1,
+  		"questiontitle": "题目",
+  		"err": false,
+  		"ismust": 0,
+  		"rela": {
+  			"queid": null,
+  			"optionindex": []
+  		},
+  		"min": 2,
+  		"max": null,
+  		"options": [{
+  			"scontent": "选项",
+  			"goquestion": [],
+  			"selectid": 0
+  		}, {
+  			"scontent": "选项",
+  			"goquestion": [],
+  			"selectid": 1
+  		}],
+  		"ans": []//答案
+  	}, {
+          /* 填空 */
+  		"show": true,
+  		"questionid": 3,
+  		"type": 2,
+  		"questiontitle": "题目",
+  		"err": false,
+  		"ismust": 0,
+  		"rela": {
+  			"queid": null,
+  			"optionindex": []
+  		},
+  		"scontent": "",// 填空内容（答案）
+  		"goquestion": []
+  	}],
+  	"ip": ""
   }
   ```
-  
+
 * 交叉分析('/cross-over-analysis')
 
   * 前端>>后端
@@ -386,13 +445,13 @@
                 /* 单选题 */
                 show: false//默认值
                 questionid://题目id
-                topicid:0 //题目类型
+                type:0 //题目类型
                 questiontitle://题目标题
                 err: false,//默认值
                 ismust: //是否必答
                 rela: {
-                    question_id: //被关联的问题id
-                    option_index: //被关联问题的选项id
+                    queid: //被关联的问题id
+                    optionindex: //被关联问题的选项id
                 },
                 options: [{
                     scontent: //选项内容
@@ -402,13 +461,13 @@
                 /* 多选题 */
                 show: false,//默认值
                 questionid//题目id
-                topicid:1,//题目类型
+                type:1,//题目类型
                 questiontitle//题目标题
                 err: false//默认值
                 ismust//是否必答
                 rela: {
-                    question_id: //被关联的问题id
-                    option_index: []//被关联问题的选项id
+                    queid: //被关联的问题id
+                    optionindex: []//被关联问题的选项id
                 },
                 min: //最少选择数
                 max: //最多选择数
@@ -419,13 +478,13 @@
                 /* 填空题 */
                 show: false,//默认值
                 questionid//问题id
-                topicid:2,//问题类型
+                type:2,//问题类型
                 questiontitle//问题标题
                 err: false,//默认值
                 ismust//是否必填
                 rela: {
-                    question_id: //被关联的问题id
-                    option_index: []//被关联问题的选项id
+                    queid: //被关联的问题id
+                    optionindex: []//被关联问题的选项id
                 },
                 scontent: ""//默认值
             }]
@@ -447,10 +506,9 @@
 
     ``` json
     rela: {
-                question_id: 2//被关联的问题id
-                option_index: [2,3]//被关联问题的选项id
+                queid: 2//被关联的问题id
+                optionindex: [2,3]//被关联问题的选项id
             },
     ```
 
-    
     

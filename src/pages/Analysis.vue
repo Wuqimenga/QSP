@@ -120,21 +120,22 @@ export default {
           for (let i = 0; i < res.result.length; i++) {
             this.qsdata.push(res.result[i]);
           }
-          console.log(this.qsdata);
         } else if (res.code === "03") {
-          //没退出页面过了一天之后，刷新页面后继续，要求重新登录
+          this.$alert("登录过期，请重新登录", "提示", {
+            confirmButtonText: "确定"
+          });
           this.$router.push({ path: "/login", query: { no_token: 1 } });
         } else {
-          this.$message({ type: "info", message: res.result });
+          this.$message({ type: "warning", message: res.result });
         }
       })
       .catch(error => {
-        this.$message({ type: "info", message: error });
+        this.$message.error(error);
       });
     //初始化渲染echarts的块的大小
   },
   methods: {
-    round(num){
+    round(num) {
       return Math.round(num);
     },
     drawBar(questionid, xdata, ydata) {

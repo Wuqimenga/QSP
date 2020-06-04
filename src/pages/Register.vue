@@ -37,17 +37,15 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        let reg=/^[a-z0-9]{6,12}$/i;
-        if(!reg.test(value))
-        {
-          callback(new Error("密码由6到12个字母或者数字组成，请注意格式"))
+        let reg = /^[a-z0-9]{6,12}$/i;
+        if (!reg.test(value)) {
+          callback(new Error("密码由6到12个字母或者数字组成，请注意格式"));
+        } else {
+          if (this.user.repwd !== "") {
+            this.$refs.registerForm.validateField("repwd");
+          }
+          callback();
         }
-      else {
-        if (this.user.repwd !== "") {
-          this.$refs.registerForm.validateField("repwd");
-        }
-        callback();
-      }
       }
     };
     var validatePass2 = (rule, value, callback) => {
@@ -62,7 +60,9 @@ export default {
     return {
       user: { username: "", password: "", repwd: "" },
       rule: {
-        username: [{ required: true, message: "请输入登陆名", trigger: "blur" }],
+        username: [
+          { required: true, message: "请输入登陆名", trigger: "blur" }
+        ],
         password: [{ validator: validatePass, trigger: "change" }],
         repwd: [{ validator: validatePass2, trigger: "change" }]
       }
@@ -73,20 +73,18 @@ export default {
     registerAction: function() {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
-          this.$delete(this.user,'repwd');
+          this.$delete(this.user, "repwd");
           api
             .Register(this.user)
             .then(res => {
               if (res.code == "01") {
-                this.$router.push({path:"/login"})
+                this.$router.push({ path: "/login" });
               } else {
-                this.$alert(res.result, "提示", {
-                  confirmButtonText: "确定"
-                });
+                this.$message({ type: "warning", message: "注册失败" });
               }
             })
             .catch(error => {
-              console.log(error);
+              this.$message.error(error);
             });
         } else {
           return false;
@@ -98,10 +96,10 @@ export default {
 </script>
 
 <style scoped>
-#title{
+#title {
   height: calc(25vh);
 }
-#btn_reg{
-  width:100%;
+#btn_reg {
+  width: 100%;
 }
 </style>
