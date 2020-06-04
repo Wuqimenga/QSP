@@ -11,8 +11,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"scontent": "",
 		"goquestion": []
@@ -24,8 +24,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "男",
@@ -44,8 +44,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"options": [{
 			"scontent": "就业",
@@ -76,8 +76,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "学校附近",
@@ -100,8 +100,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "是",
@@ -120,8 +120,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "校方",
@@ -144,8 +144,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "是",
@@ -164,8 +164,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"options": [{
 			"scontent": "2000以下",
@@ -192,8 +192,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"min": 2,
 		"max": 4,
@@ -223,8 +223,8 @@
 		"err": false,
 		"ismust": 0,
 		"rela": {
-			"question_id": 7,
-			"option_index": [0]
+			"queid": 7,
+			"optionindex": [0]
 		},
 		"scontent": "",
 		"goquestion": []
