@@ -391,6 +391,10 @@ export default {
     // 提交数据前对数据进行处理，增加ip、goquestion、ans属性，返回处理好的对象array，不改变原有的 this.formData
     handleData(formData) {
       var array = formData; // 返回的结果,to是跳转问题的index
+<<<<<<< HEAD
+=======
+      console.log(array);
+>>>>>>> b2ad66b5f379c978591ec8c27233db624cc4b227
       array.createtime = format(new Date().toLocaleDateString(), "YYYY-MM-DD");
       for (
         var i = 0;
