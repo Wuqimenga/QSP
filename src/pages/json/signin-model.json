@@ -11,8 +11,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"scontent": "",
 		"goquestion": []
@@ -24,8 +24,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"scontent": "",
 		"goquestion": []
@@ -37,8 +37,8 @@
 		"err": false,
 		"ismust": 1,
 		"rela": {
-			"question_id": null,
-			"option_index": []
+			"queid": null,
+			"optionindex": []
 		},
 		"scontent": "",
 		"goquestion": []
