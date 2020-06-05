@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  <div class="app">
     <!-- 这个按钮可以放在问卷列表里面，需要获取问卷id -->
     <!-- <el-button @click="fixQuestionnaire(paperid)">修改</el-button> -->
-
+    <el-backtop></el-backtop>
     <vheader content="主页" :backRouter="this.$router" />
     <div style="margin-top:calc(1vh)">
       <el-row type="flex" justify="center" align="center">
@@ -425,5 +425,8 @@ export default {
   padding: 0;
   font-size: 14px;
   border: 0;
+}
+.app{
+  width: auto;
 }
 </style>

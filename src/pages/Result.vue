@@ -1,6 +1,8 @@
 <template>
   <div>
     <div class="center-plane">
+    <el-backtop></el-backtop>
+
       <!--列表形式-->
       <el-table
         v-if="ansData"

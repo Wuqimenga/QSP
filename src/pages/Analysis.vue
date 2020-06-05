@@ -1,5 +1,7 @@
 <template>
   <div class="app">
+    <el-backtop></el-backtop>
+
     <div v-for="(item,index) in qsdata" :key="index">
       <div class="option-card" v-if="item.type===0 ||item.type===1">
         <div>

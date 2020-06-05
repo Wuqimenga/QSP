@@ -1,9 +1,9 @@
 <template>
   <div>
     <vheader content="编辑" :backRouter="this.$router" />
+    <el-backtop></el-backtop>
+
     <div class="center-plane">
-      <h3>formData:</h3>
-      {{formData}}
       <el-form ref="rulesForm1" :rules="rules" :model="formData">
         <div class="edit-head-menu">
           <el-row :gutter="10">

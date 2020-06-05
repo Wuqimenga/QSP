@@ -1,5 +1,7 @@
 <template>
   <div class="center-plane">
+    <el-backtop></el-backtop>
+
     <div class="my-card">
       <h4>交叉分析</h4>
       <el-row :gutter="10">
@@ -116,8 +118,7 @@ export default {
   },
   created() {
     //this.paperid = this.$route.params.paperid; // 点击“交叉分析“后传paperid到crossoveranalysis页面
-    console.log("cross"+this.paperid);
-    console.log("cross"+this.userid);
+    
     // 向后端发送请求，返回详细作答信息以作数据分析
     api
       .GetResultToAnalysis({
@@ -126,9 +127,10 @@ export default {
       })
       .then(res => {
         if (res.code === "01") {
-          console.log("01")
-          this.selectQues = getSelectQuestions(res.result);
-          console.log(this.selectQues);
+          console.log("cross"+this.paperid);
+          console.log("cross"+this.userid);
+          this.selectQues = this.getSelectQuestions(res.result);
+          // console.log(res.result);
         } else if (res.code === "03") {
           this.$alert("登录过期，请重新登录", "提示", {
             confirmButtonText: "确定"
@@ -149,6 +151,7 @@ export default {
     },
     // 获取问卷所有的选择题
     getSelectQuestions(result) {
+      console.log(result);
       var selectQues = [];
       for (var i = 0, j = 0; i < result.length; i++) {
         // 选择题
@@ -156,6 +159,7 @@ export default {
           selectQues[j].questionid = result[i].questionid;
           selectQues[j].questiontitle = result[i].questiontitle;
           j++;
+          console.log(i);
         }
       }
       return selectQues;

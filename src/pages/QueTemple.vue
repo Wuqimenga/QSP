@@ -1,7 +1,8 @@
 <!-- 预览和回答页面共用模板 -->
 <template>
   <div class="center-plane">
-    {{formData}}
+    <el-backtop></el-backtop>
+    
     <el-form :rules="rules" v-model="formData">
       <div>
         <h1>{{formData.papertitle}}</h1>
