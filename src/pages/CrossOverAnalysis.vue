@@ -68,8 +68,7 @@
 
 
 <script>
-import _get_analysis from "./json/get-analysis.json"; // 引入模拟后端通过/get-analysis 传给前端的数据
-import _get_cross_over_analysis from "./json/get-cross-over-analysis.json"; // 引入模拟后端通过/get-analysis 传给前端的数据
+import api from "../fetch/api";
 
 export default {
   data() {
@@ -78,7 +77,7 @@ export default {
       Ytitle: "", // 作为因变量的题目内容
       tableVisible: false, // 表格显示
       barVisible: false, // 柱状图显示
-      paperid: null,
+      // paperid: "",
       submitErr: "",
       selectQues: {},
       crossQue: {
@@ -88,6 +87,10 @@ export default {
       option: {},
       myChart: null
     };
+  },
+  props:{
+    paperid:"",
+    userid:null
   },
   mounted() {
     window.onresize = () => {
@@ -112,23 +115,27 @@ export default {
     }
   },
   created() {
-    this.paperid = this.$route.params.paperid; // 点击“交叉分析“后传paperid到crossoveranalysis页面
-    // 模拟获得后端详细作答信息
-    this.selectQues = _get_analysis.result;
-
+    //this.paperid = this.$route.params.paperid; // 点击“交叉分析“后传paperid到crossoveranalysis页面
+    console.log("cross"+this.paperid);
+    console.log("cross"+this.userid);
     // 向后端发送请求，返回详细作答信息以作数据分析
     api
-      .GetResultToAnalysis({ paperid: this.paperid })
+      .GetResultToAnalysis({
+        userid: this.userid,//this.$route.query.userid,
+        paperid: this.paperid//this.$route.query.paperid
+      })
       .then(res => {
-        if (res.code == "01") {
+        if (res.code === "01") {
+          console.log("01")
           this.selectQues = getSelectQuestions(res.result);
-        } else if (res.code == "02") {
-          this.$message({ type: "warning", message: res.result });
-        } else {
+          console.log(this.selectQues);
+        } else if (res.code === "03") {
           this.$alert("登录过期，请重新登录", "提示", {
             confirmButtonText: "确定"
           });
           this.$router.push({ path: "/login", query: { no_token: 1 } });
+        } else {
+          this.$message({ type: "warning", message: res.result });
         }
       })
       .catch(error => {
@@ -191,9 +198,8 @@ export default {
         this.submitErr = "题目不能重复"; // 有重复
       } else {
         this.submitErr = "";
-        // 模拟从后端获取数据
-        this.option = _get_cross_over_analysis.result;
-        // // 提交crossQue到后端，获得交叉分析数据
+
+        // 提交crossQue到后端，获得交叉分析数据
         api
           .getCrossAnalysis({ paperid: this.paperid, crossQue: this.crossQue })
           .then(res => {
@@ -240,7 +246,7 @@ export default {
         return;
       }
       // 返回json，json键为列名（第一行），值为后面的行
-      var json = [];
+      var json = this.option;
       var total = []; // 每行总和，用于计算百分比
       var row_num = this.option.xAxis.data.length; // 行数
       var col_num = this.option.series.length; // 列数

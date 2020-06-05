@@ -15,6 +15,8 @@ import Share from "@/pages/Share";
 import Analysis from "@/pages/Analysis";
 import Result from "@/pages/Result";
 import Test from "@/pages/Test"
+
+import AllAnalysis from "@/pages/AllAnalysis"
 Vue.use(Router);
 
 export default new Router({
@@ -117,6 +119,14 @@ export default new Router({
     {
       path: "/",
       redirect: "/login"
+    },
+    {
+      path: "/allanalysis",
+      name: "AllAnalysis",
+      component: AllAnalysis,
+      meta: {
+        requireAuth: true //以这个字段来说明这个路由是否需要登录认证才能访问
+      }
     }
   ]
 });

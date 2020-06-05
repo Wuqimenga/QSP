@@ -344,7 +344,7 @@ export default {
 
     resultAction: function(paperid) {
       this.$router.push({
-        path: "/result",
+        path: "/allanalysis",
         query: { userid: this.querylist.userid, paperid: paperid }
       });
     },

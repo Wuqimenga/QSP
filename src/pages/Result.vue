@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="listContent">
+    <div class="center-plane">
       <!--列表形式-->
       <el-table
         v-if="ansData"
@@ -12,11 +12,10 @@
         <el-table-column label="序号" type="index" :index="indexMethod" width="50px"></el-table-column>
         <el-table-column prop="anstime" label="创建时间"></el-table-column>
         <el-table-column prop="ip" label="ip地址"></el-table-column>
-        <!-- <el-table-column prop="location" label="ip地址"></el-table-column> -->
-        <el-table-column prop="location" label="地区"></el-table-column>
+        <!-- <el-table-column prop="location" label="地区"></el-table-column> -->
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button class="deleteBut" @click="deleteAction(scope.$index)">删除</el-button>
+            <el-button size="mini" @click="deleteAction(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -25,9 +24,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[5,12,20,40]"
         :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="ansData.length"
       ></el-pagination>
     </div>
@@ -44,9 +42,8 @@ export default {
   data() {
     //返回数据：id
     return {
-      //userId:this.$route.params.userId,
-
-      paperId: this.$route.query.paperid, //问卷id
+      //userid:this.$route.params.userid,
+      //paperid:this.$route.params.paperid,
       //数组形式
       ansData: [],
       pageSize: 12, //每一页的记录数量
@@ -54,15 +51,17 @@ export default {
       thisList: 0
     };
   },
-
+  props:{
+    paperid:"",
+  },
   //后台传入数据的时候使用，为ansData赋值
   created() {
     api
-      .GetStatics({ paperid: this.paperId }) // 提交问卷id到后端
+      .GetStatics({ paperid: this.paperid }) // 提交问卷id到后端
       .then(res => {
         if (res.code == "01") {
           this.ansData = res.result;
-          console.log(this.ansData);
+          // console.log(this.ansData);
         } else {
           this.$alert(res.result, "无法获取答卷列表", {
             confirmButtonText: "确定"
@@ -83,11 +82,11 @@ export default {
 
     //表格项目样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      return "text-align:center;";
+      return "text-align:center;padding:0;";
     },
     //表格头样式
     rowClass({ row, rowIndex }) {
-      return "text-align:center;background-color: #1989fa!important;color:#fff;font-weight:400;";
+      return "text-align:center;background-color: #409EFF!important;color:#fff;font-weight:400;;padding:0;";
     },
 
     //修改每页展示记录条数后改变pageSize
@@ -118,7 +117,7 @@ export default {
           //从页面上删除答卷
           var IP = this.ansData[index].ip;
           this.ansData.splice(index, 1);
-          console.log(JSON.stringify(this.ansData));
+          // console.log(JSON.stringify(this.ansData));
           this.$message({
             type: "info",
             message: "已删除记录"
@@ -126,7 +125,7 @@ export default {
 
           //调用api接口，将删除后的数据写进后端数据库
           api
-            .DeleteAnswer({ paperid: this.paperId, ip: IP })
+            .DeleteAnswer({ paperid: this.paperid, ip: IP })
             .then(res => {
               if (res.code == "01") {
                 //this.$router.go(-1);
@@ -155,9 +154,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.listContent {
-  width: 50%;
-  margin: 0 auto;
-}
-</style>
+

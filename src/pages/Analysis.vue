@@ -48,13 +48,33 @@
         ></div>
         <ul class="header-ul-right">
           <li class="li-right">
-            <el-button @click="transformTableStatus(item.questionid)">表格</el-button>
+            <el-button 
+            @click="transformTableStatus(item.questionid)"
+            size="small"
+            class="left-float"
+            icon="el-icon-s-grid"
+            >表格
+            </el-button>
           </li>
+
           <li class="li-right">
-            <el-button @click="paintBarforOption(item.questionid)">柱状图</el-button>
+            <el-button @click="paintBarforOption(item.questionid)"
+            size="small"
+            class="left-float"
+            icon="el-icon-s-data"
+            >
+            柱状图
+            </el-button>
           </li>
+
           <li class="li-right">
-            <el-button @click="paintPieforOption(item.questionid)">饼状图</el-button>
+            <el-button @click="paintPieforOption(item.questionid)"
+            size="small"
+            class="left-float"
+            icon="el-icon-s-help"
+            >
+            饼状图
+            </el-button>
           </li>
         </ul>
       </div>
@@ -101,16 +121,20 @@ export default {
   data() {
     return {
       qsdata: [],
-      paperid: ""
+      // paperid: ""
     };
+  },
+  props:{
+    paperid:"",
+    userid:null
   },
   created() {
     //获取数据放到qsdata中
-    this.paperid = this.$route.query.paperid;
+    // this.paperid = this.$route.query.paperid;
     api
       .GetResultToAnalysis({
-        userid: this.$route.query.userid,
-        paperid: this.$route.query.paperid
+        userid: this.userid,//this.$route.query.userid,
+        paperid: this.paperid//this.$route.query.paperid
       })
       .then(res => {
         if (res.code === "01") {
@@ -380,7 +404,7 @@ export default {
 }
 .li-right {
   display: inline;
-  padding-left: calc(4vw);
+  /* padding-left: calc(4vw); */
 }
 .header-ul-right {
   margin: calc(2vh) 0;
