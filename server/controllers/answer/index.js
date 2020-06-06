@@ -63,9 +63,9 @@ module.exports = {
       }//同上
       //自变量只有一个
         if (x.length < 2) {
-        var bodyx = {xAxis: [], series: ''};
+        var bodyx = {xAxis: {data:[]}, series: ''};
         for(let i=0;i<data_a.length;i++){
-          bodyx.xAxis.push(data_a[i].scontent)
+          bodyx.xAxis.data.push(data_a[i].scontent)
         }
         var seriesx = [];
         for (let i = 0; i < data_c.length; i++) {
@@ -120,7 +120,8 @@ module.exports = {
           where: {
             paperid: req.body.paperid,
             questionid: x[1]
-          }
+          },
+          raw:true
         };
         //得到公用的a c的选项内容
         var data_b = await _model.findAll(options, mapxbcondition);//b-scontent
@@ -131,22 +132,21 @@ module.exports = {
             where: {
               paperid:req.body.paperid,
               questionid:x[1],
-              scontent: data_b[j]
+              scontent: data_b[j].scontent
             },
             raw:true
           };
           var innerb = await _model.findAll(options, conditionb);
           b.push(innerb[0]);
         }//b-scontent对应的b-selectid
-
         var bodyab= {xAxis: '', series: ''};
-        var innerxAxis=[];
+        var innerxAxis={data:[]};
         for(let i=0;i<data_a.length;i++)
         {
           for(let j=0;j<data_b.length;j++)
           {
             let str=data_a[i].scontent+"/"+data_b[j].scontent;
-            innerxAxis.push(str);
+            innerxAxis.data.push(str);
           }
         }
         bodyab.xAxis=innerxAxis;
@@ -162,40 +162,50 @@ module.exports = {
             where: {
               paperid:req.body.paperid,
               questionid:req.body.Y,
-              selectid: c[i]
-            }
+              selectid: c[i].selectid
+            },
+            raw:true
           };
           var Cip = await _model.findAll(answer, condition22);//得到选C问题c[i]选项的ip组
-
+/*           console.log("Cip")
+          console.log(i)
+          console.log(Cip); */
           for (let j = 0; j < a.length; j++) {
-            let num = 0;
             var condition11 = {
               attributes: ['ip'],
               where: {
                 paperid:req.body.paperid,
                 questionid:x[0],
-                selectid: a[j]
-              }
+                selectid: a[j].selectid
+              },
+              raw:true
             };
             var Aip = await _model.findAll(answer, condition11);//得到选A问题a[j]选项的ip组
-            for(let k=0;k<b.length;b++)
+/*             console.log("Aip")
+            console.log(j)
+            console.log(Aip) */
+            for(let k=0;k<b.length;k++)
             {
               var condition33 = {
                 attributes: ['ip'],
                 where: {
                   paperid:req.body.paperid,
                   questionid:x[1],
-                  selectid: b[k]
-                }
+                  selectid: b[k].selectid
+                },
+                raw:true
               };
               var Bip = await _model.findAll(answer, condition33);//得到选B问题b[k]选项的ip组
-
+/*               console.log("Bip")
+              console.log(k)
+              console.log(Bip) */
+              let num = 0;
               for (let ii = 0; ii < Aip.length; ii++)
               {
                 for (let jj = 0; jj < Bip.length; jj++) {
                   for (let kk = 0; kk < Cip.length; kk++) {
 
-                    if ((Aip[ii].ip == Bip[jj].ip)&&(Bip[jj].ip==Cip[kk])) {
+                    if ((Aip[ii].ip == Bip[jj].ip)&&(Bip[jj].ip==Cip[kk].ip)) {
                       num++;
                     }
                   }

@@ -64,13 +64,15 @@
       </el-table>
     </div>
     <!-- 交叉分析图表 -->
-    <div id="myChart" :style="{width: '100%', height: '500px'}"></div>
+    <div id="myChart" :style="{margin:'0 auto',width: '80%', height: '250px'}"></div>
   </div>
 </template>
 
 
 <script>
 import api from "../fetch/api";
+import _get_cross_over_analysis from "./json/get-cross-over-analysis.json";// 引入模拟后端通过/get-analysis 传给前端的数据
+import _get_analysis from "./json/get-analysis.json";// 引入模拟后端通过/get-analysis 传给前端的数据
 
 export default {
   data() {
@@ -79,7 +81,6 @@ export default {
       Ytitle: "", // 作为因变量的题目内容
       tableVisible: false, // 表格显示
       barVisible: false, // 柱状图显示
-      // paperid: "",
       submitErr: "",
       selectQues: {},
       crossQue: {
@@ -117,20 +118,16 @@ export default {
     }
   },
   created() {
-    //this.paperid = this.$route.params.paperid; // 点击“交叉分析“后传paperid到crossoveranalysis页面
     
     // 向后端发送请求，返回详细作答信息以作数据分析
     api
       .GetResultToAnalysis({
-        userid: this.userid,//this.$route.query.userid,
-        paperid: this.paperid//this.$route.query.paperid
+        userid: this.userid,
+        paperid: this.paperid
       })
       .then(res => {
         if (res.code === "01") {
-          console.log("cross"+this.paperid);
-          console.log("cross"+this.userid);
           this.selectQues = this.getSelectQuestions(res.result);
-          // console.log(res.result);
         } else if (res.code === "03") {
           this.$alert("登录过期，请重新登录", "提示", {
             confirmButtonText: "确定"
@@ -143,6 +140,8 @@ export default {
       .catch(error => {
         this.$message.error(error);
       });
+    // this.selectQues = _get_analysis.result;
+    // console.log(JSON.stringify(this.selectQues))
   },
   methods: {
     // 切换显示状态
@@ -151,15 +150,15 @@ export default {
     },
     // 获取问卷所有的选择题
     getSelectQuestions(result) {
-      console.log(result);
       var selectQues = [];
       for (var i = 0, j = 0; i < result.length; i++) {
         // 选择题
         if (result[i].type < 2) {
-          selectQues[j].questionid = result[i].questionid;
-          selectQues[j].questiontitle = result[i].questiontitle;
+          selectQues.push({
+            questionid:result[i].questionid,
+            questiontitle:result[i].questiontitle
+          })
           j++;
-          console.log(i);
         }
       }
       return selectQues;
@@ -174,7 +173,6 @@ export default {
         data[i] = tp.series[i].name;
       }
       tp.tooltip = {};
-      // tp.grid={left:100}
       tp.legend = { data: data };
       tp.toolbox = {
         feature: {
@@ -187,28 +185,59 @@ export default {
     },
     // 向后端提交需要进行交叉分析的题目
     getCrossAnalysis() {
+      // 对crossQue进行处理，去掉""元素
+      for(var i=0;i<this.crossQue.X.length;i++)
+      {
+        if(this.crossQue.X[i]==="")
+        {
+          this.crossQue.X.splice(i,1);
+        }
+      }
+      if(this.crossQue.Y===""){this.crossQue.Y=null;}
+      // 对crossQue处理完毕
+
+      // 对不合法输入的判断和提示
       if (
-        !this.crossQue.X ||
-        (this.crossQue.X && this.crossQue.X.length == 0)
+        this.crossQue.X===[] 
       ) {
         this.submitErr = "自变量不能为空";
-      } else if (!this.crossQue.Y) {
+      } else if (this.crossQue.Y===null) {
         this.submitErr = "因变量不能为空";
       } else if (
-        this.crossQue.X[0] == this.crossQue.X[1] ||
-        this.crossQue.Y == this.crossQue.X[0] ||
-        this.crossQue.Y == this.crossQue.X[1]
+        this.crossQue.X[0] === this.crossQue.X[1] ||
+        this.crossQue.Y === this.crossQue.X[0] ||
+        this.crossQue.Y === this.crossQue.X[1]
       ) {
         this.submitErr = "题目不能重复"; // 有重复
       } else {
-        this.submitErr = "";
-
+        this.submitErr = "";// 清空警示
         // 提交crossQue到后端，获得交叉分析数据
         api
-          .getCrossAnalysis({ paperid: this.paperid, crossQue: this.crossQue })
+          .CrossAnalysis({ paperid: this.paperid,  X:this.crossQue.X, Y:this.crossQue.Y })
           .then(res => {
             if (res.code == "01") {
               this.option = res.result;
+              console.log(JSON.stringify(this.option));
+              // 数据处理
+              // 基于准备好的dom，初始化echarts实例
+              const myChart = (this.myChart = this.$echarts.init(
+                document.getElementById("myChart")
+              ));
+              // 绘制图表
+              var option = this.setToBar(this.option);
+              myChart.setOption(option);
+
+              // 绘制表格
+              this.crossTable = this.setToCrossTable();
+              // 显示表格
+              this.tableVisible = true;
+              // 因变量标题
+              for (var i = 0; i < this.selectQues.length; i++) {
+                if (this.selectQues[i].questionid == this.crossQue.Y) {
+                  this.Ytitle = this.selectQues[i].questiontitle;
+                  break;
+                }
+              }
             } else if (res.code == "02") {
               this.$message({ type: "warning", message: res.result });
             } else {
@@ -222,26 +251,27 @@ export default {
             this.$message.error(error);
           });
 
-        // 数据处理
-        // 基于准备好的dom，初始化echarts实例
-        const myChart = (this.myChart = this.$echarts.init(
-          document.getElementById("myChart")
-        ));
-        // 绘制图表
-        var option = this.setToBar(this.option);
-        myChart.setOption(option);
+              // this.option = _get_cross_over_analysis.result;
+              // // 数据处理
+              // // 基于准备好的dom，初始化echarts实例
+              // const myChart = (this.myChart = this.$echarts.init(
+              //   document.getElementById("myChart")
+              // ));
+              // // 绘制图表
+              // var option = this.setToBar(this.option);
+              // myChart.setOption(option);
 
-        // 绘制表格
-        this.crossTable = this.setToCrossTable();
-        // 显示表格
-        this.tableVisible = true;
-        // 因变量标题
-        for (var i = 0; i < this.selectQues.length; i++) {
-          if (this.selectQues[i].questionid == this.crossQue.Y) {
-            this.Ytitle = this.selectQues[i].questiontitle;
-            break;
-          }
-        }
+              // // 绘制表格
+              // this.crossTable = this.setToCrossTable();
+              // // 显示表格
+              // this.tableVisible = true;
+              // // 因变量标题
+              // for (var i = 0; i < this.selectQues.length; i++) {
+              //   if (this.selectQues[i].questionid == this.crossQue.Y) {
+              //     this.Ytitle = this.selectQues[i].questiontitle;
+              //     break;
+              //   }
+              // }
       }
     },
     // 处理option获得交叉分析表
@@ -250,7 +280,7 @@ export default {
         return;
       }
       // 返回json，json键为列名（第一行），值为后面的行
-      var json = this.option;
+      var json = [];
       var total = []; // 每行总和，用于计算百分比
       var row_num = this.option.xAxis.data.length; // 行数
       var col_num = this.option.series.length; // 列数
@@ -277,3 +307,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.cross-chart{
+  margin:0 auto;
+  width: 25%;
+  height: 250px;
+}
+@media screen and (min-width: 1000px){
+  .cross-chart{width: 80%;}
+}
+</style>
